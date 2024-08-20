@@ -11,6 +11,16 @@
 		BE06A2B92C74ED88008F9C1D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE06A2B82C74ED88008F9C1D /* ContentView.swift */; };
 		BE06A2BB2C74ED8A008F9C1D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BE06A2BA2C74ED8A008F9C1D /* Assets.xcassets */; };
 		BE06A2BE2C74ED8A008F9C1D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BE06A2BD2C74ED8A008F9C1D /* Preview Assets.xcassets */; };
+		BE06A2CA2C74EEFE008F9C1D /* Interval.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE06A2C92C74EEFE008F9C1D /* Interval.swift */; };
+		BE06A2CC2C74EF13008F9C1D /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE06A2CB2C74EF13008F9C1D /* User.swift */; };
+		BE06A2CE2C74EF2F008F9C1D /* IntervalListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE06A2CD2C74EF2F008F9C1D /* IntervalListView.swift */; };
+		BE06A2D02C74EF4F008F9C1D /* AddIntervalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE06A2CF2C74EF4F008F9C1D /* AddIntervalView.swift */; };
+		BE06A2D22C74EF5B008F9C1D /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE06A2D12C74EF5B008F9C1D /* SettingsView.swift */; };
+		BE06A2D42C74EF71008F9C1D /* InternalViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE06A2D32C74EF71008F9C1D /* InternalViewModel.swift */; };
+		BE06A2D62C74EF82008F9C1D /* UserViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE06A2D52C74EF82008F9C1D /* UserViewModel.swift */; };
+		BE06A2D82C74EF96008F9C1D /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE06A2D72C74EF96008F9C1D /* NotificationService.swift */; };
+		BE06A2DA2C74EFA1008F9C1D /* SharingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE06A2D92C74EFA1008F9C1D /* SharingService.swift */; };
+		BE06A2DC2C74EFB0008F9C1D /* DateHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE06A2DB2C74EFB0008F9C1D /* DateHelpers.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +29,16 @@
 		BE06A2B82C74ED88008F9C1D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		BE06A2BA2C74ED8A008F9C1D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BE06A2BD2C74ED8A008F9C1D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		BE06A2C92C74EEFE008F9C1D /* Interval.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Interval.swift; sourceTree = "<group>"; };
+		BE06A2CB2C74EF13008F9C1D /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		BE06A2CD2C74EF2F008F9C1D /* IntervalListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntervalListView.swift; sourceTree = "<group>"; };
+		BE06A2CF2C74EF4F008F9C1D /* AddIntervalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddIntervalView.swift; sourceTree = "<group>"; };
+		BE06A2D12C74EF5B008F9C1D /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		BE06A2D32C74EF71008F9C1D /* InternalViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternalViewModel.swift; sourceTree = "<group>"; };
+		BE06A2D52C74EF82008F9C1D /* UserViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserViewModel.swift; sourceTree = "<group>"; };
+		BE06A2D72C74EF96008F9C1D /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		BE06A2D92C74EFA1008F9C1D /* SharingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharingService.swift; sourceTree = "<group>"; };
+		BE06A2DB2C74EFB0008F9C1D /* DateHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateHelpers.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -35,6 +55,11 @@
 		BE06A2AA2C74ED88008F9C1D = {
 			isa = PBXGroup;
 			children = (
+				BE06A2C82C74EE4D008F9C1D /* Helpers */,
+				BE06A2C72C74EE45008F9C1D /* Services */,
+				BE06A2C62C74EE3C008F9C1D /* ViewModels */,
+				BE06A2C52C74EE33008F9C1D /* Views */,
+				BE06A2C42C74EE28008F9C1D /* Models */,
 				BE06A2B52C74ED88008F9C1D /* Intervals */,
 				BE06A2B42C74ED88008F9C1D /* Products */,
 			);
@@ -52,7 +77,6 @@
 			isa = PBXGroup;
 			children = (
 				BE06A2B62C74ED88008F9C1D /* IntervalsApp.swift */,
-				BE06A2B82C74ED88008F9C1D /* ContentView.swift */,
 				BE06A2BA2C74ED8A008F9C1D /* Assets.xcassets */,
 				BE06A2BC2C74ED8A008F9C1D /* Preview Content */,
 			);
@@ -65,6 +89,52 @@
 				BE06A2BD2C74ED8A008F9C1D /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		BE06A2C42C74EE28008F9C1D /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				BE06A2C92C74EEFE008F9C1D /* Interval.swift */,
+				BE06A2CB2C74EF13008F9C1D /* User.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		BE06A2C52C74EE33008F9C1D /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				BE06A2B82C74ED88008F9C1D /* ContentView.swift */,
+				BE06A2CD2C74EF2F008F9C1D /* IntervalListView.swift */,
+				BE06A2CF2C74EF4F008F9C1D /* AddIntervalView.swift */,
+				BE06A2D12C74EF5B008F9C1D /* SettingsView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		BE06A2C62C74EE3C008F9C1D /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				BE06A2D32C74EF71008F9C1D /* InternalViewModel.swift */,
+				BE06A2D52C74EF82008F9C1D /* UserViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		BE06A2C72C74EE45008F9C1D /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				BE06A2D72C74EF96008F9C1D /* NotificationService.swift */,
+				BE06A2D92C74EFA1008F9C1D /* SharingService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		BE06A2C82C74EE4D008F9C1D /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				BE06A2DB2C74EFB0008F9C1D /* DateHelpers.swift */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -137,8 +207,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BE06A2D22C74EF5B008F9C1D /* SettingsView.swift in Sources */,
+				BE06A2CE2C74EF2F008F9C1D /* IntervalListView.swift in Sources */,
+				BE06A2CC2C74EF13008F9C1D /* User.swift in Sources */,
+				BE06A2D42C74EF71008F9C1D /* InternalViewModel.swift in Sources */,
 				BE06A2B92C74ED88008F9C1D /* ContentView.swift in Sources */,
+				BE06A2DC2C74EFB0008F9C1D /* DateHelpers.swift in Sources */,
 				BE06A2B72C74ED88008F9C1D /* IntervalsApp.swift in Sources */,
+				BE06A2CA2C74EEFE008F9C1D /* Interval.swift in Sources */,
+				BE06A2D62C74EF82008F9C1D /* UserViewModel.swift in Sources */,
+				BE06A2D82C74EF96008F9C1D /* NotificationService.swift in Sources */,
+				BE06A2D02C74EF4F008F9C1D /* AddIntervalView.swift in Sources */,
+				BE06A2DA2C74EFA1008F9C1D /* SharingService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
