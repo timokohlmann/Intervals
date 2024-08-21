@@ -14,15 +14,19 @@ struct IntervalListView: View {
                             selectedInterval = interval
                             showingAddEditInterval = true
                         }
-                        .swipeActions {
-                            Button("Complete") {
+                        .swipeActions(edge: .trailing) {
+                            Button(role: .destructive) {
+                                viewModel.deleteInterval(interval)
+                            } label: {
+                                Label("Delete", systemImage: "trash")
+                            }
+                            
+                            Button {
                                 viewModel.markIntervalAsCompleted(interval.id)
+                            } label: {
+                                Label("Complete", systemImage: "checkmark")
                             }
                             .tint(.green)
-                            
-                            Button("Delete", role: .destructive) {
-                                viewModel.deleteInterval(interval)
-                            }
                         }
                 }
             }
