@@ -15,17 +15,7 @@ struct IntervalListView: View {
                             IntervalRowView(interval: interval)
                         }
                     )
-                    .swipeActions(edge: .trailing) {
-                        // Remove the Complete button here
-                        /*
-                        Button {
-                            viewModel.markIntervalAsCompleted(interval.id)
-                        } label: {
-                            Label("Complete", systemImage: "checkmark")
-                        }
-                        .tint(.green)
-                        */
-                    }
+                
                 }
             }
             .navigationTitle("Intervals")

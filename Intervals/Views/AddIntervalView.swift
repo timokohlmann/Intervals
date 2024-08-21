@@ -81,12 +81,14 @@ struct AddEditIntervalView: View {
     }
 
     private func saveNewInterval() {
+        print("saveNewInterval called")
         let finalDate = includeTime ? startDate.setting(time: startTime) : startDate.removeTime()
         viewModel.addInterval(name: name, startDate: finalDate, frequencyType: frequencyType, frequencyCount: frequencyCount, includeTime: includeTime)
         dismiss()
     }
 
     private func updateInterval() {
+        print("updateInterval called")
         guard let id = intervalId else { return }
         let finalDate = includeTime ? startDate.setting(time: startTime) : startDate.removeTime()
         viewModel.updateInterval(id: id, name: name, startDate: finalDate, frequencyType: frequencyType, frequencyCount: frequencyCount, includeTime: includeTime)
