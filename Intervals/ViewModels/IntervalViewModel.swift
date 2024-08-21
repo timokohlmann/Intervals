@@ -9,9 +9,13 @@ class IntervalViewModel: ObservableObject {
         intervals.append(newInterval)
     }
     
-    func updateInterval(_ updatedInterval: Interval) {
-        if let index = intervals.firstIndex(where: { $0.id == updatedInterval.id }) {
-            intervals[index] = updatedInterval
+    func updateInterval(id: UUID, name: String, startDate: Date, frequencyType: FrequencyType, frequencyCount: Int) {
+        if let index = intervals.firstIndex(where: { $0.id == id }) {
+            intervals[index].name = name
+            intervals[index].startDate = startDate
+            intervals[index].frequencyType = frequencyType
+            intervals[index].frequencyCount = frequencyCount
+            intervals[index].updateNextDue()
         }
     }
     

@@ -2,14 +2,18 @@ import SwiftUI
 
 struct IntervalListView: View {
     @StateObject private var viewModel = IntervalViewModel()
-    @State private var showingAddInterval = false
-    
-    
+    @State private var showingAddEditInterval = false
+    @State private var selectedInterval: Interval?
+
     var body: some View {
         NavigationView {
             List {
                 ForEach(viewModel.intervals) { interval in
                     IntervalRowView(interval: interval)
+                        .onTapGesture {
+                            selectedInterval = interval
+                            showingAddEditInterval = true
+                        }
                         .swipeActions {
                             Button("Complete") {
                                 viewModel.markIntervalAsCompleted(interval.id)
@@ -26,14 +30,15 @@ struct IntervalListView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
-                        showingAddInterval = true
+                        selectedInterval = nil
+                        showingAddEditInterval = true
                     }) {
                         Image(systemName: "plus")
                     }
                 }
             }
-            .sheet(isPresented: $showingAddInterval) {
-                AddIntervalView(viewModel: viewModel)
+            .sheet(isPresented: $showingAddEditInterval) {
+                AddEditIntervalView(viewModel: viewModel, interval: selectedInterval)
             }
         }
     }
@@ -49,14 +54,13 @@ struct IntervalRowView: View {
             Text("Next due: \(interval.nextDue, formatter: itemFormatter)")
                 .font(.subheadline)
                 .foregroundColor(.secondary)
-                
         }
     }
 }
 
 private let itemFormatter: DateFormatter = {
     let formatter = DateFormatter()
-    formatter.dateStyle = .short
+    formatter.dateStyle = .medium
     formatter.timeStyle = .short
     return formatter
 }()
