@@ -7,29 +7,42 @@ class IntervalViewModel: ObservableObject {
     @Published var intervals: [Interval] = []
     
     
-    
-    
     func scheduleNotification(for interval: Interval) {
-           let content = UNMutableNotificationContent()
-           content.title = "Task Due: \(interval.name)"
-           content.body = "It's time to complete your task."
-           content.sound = .default
+        let content = UNMutableNotificationContent()
+        content.title = "Task Due: \(interval.name)"
+        content.body = "It's time to complete your task."
+        content.sound = .default
 
-         
-           let triggerDate = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: interval.nextDue)
-           let trigger = UNCalendarNotificationTrigger(dateMatching: triggerDate, repeats: false)
+      
+        let localDate = convertToLocalTime(date: interval.nextDue)
+        
+        print("Scheduling notification for interval: \(interval.name) at \(localDate)")
 
-           let request = UNNotificationRequest(identifier: interval.id.uuidString, content: content, trigger: trigger)
+        let triggerDate = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: localDate)
+        let trigger = UNCalendarNotificationTrigger(dateMatching: triggerDate, repeats: false)
 
-         
-           UNUserNotificationCenter.current().add(request) { error in
-               if let error = error {
-                   print("Failed to schedule notification: \(error.localizedDescription)")
-               } else {
-                   print("Notification scheduled for \(interval.name) on \(interval.nextDue)")
-               }
-           }
-       }
+        let request = UNNotificationRequest(identifier: interval.id.uuidString, content: content, trigger: trigger)
+
+        // Remove any previous notification with the same identifier before adding a new one
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [interval.id.uuidString])
+        
+        UNUserNotificationCenter.current().add(request) { error in
+            if let error = error {
+                print("Failed to schedule notification: \(error.localizedDescription)")
+            } else {
+                print("Notification scheduled for \(interval.name) at \(localDate)")
+            }
+        }
+    }
+
+
+    func convertToLocalTime(date: Date) -> Date {
+        let timezone = TimeZone.current
+        let seconds = TimeInterval(timezone.secondsFromGMT(for: date))
+        return Date(timeInterval: seconds, since: date)
+    }
+
+
     
     func addInterval(name: String, startDate: Date, frequencyType: FrequencyType, frequencyCount: Int, includeTime: Bool) {
         let newInterval = Interval(name: name, startDate: startDate, frequencyType: frequencyType, frequencyCount: frequencyCount, includeTime: includeTime)

@@ -2,7 +2,7 @@ import SwiftUI
 import UserNotifications
 
 
-class AppDelegate: NSObject, UIApplicationDelegate {
+class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
@@ -12,10 +12,12 @@ class AppDelegate: NSObject, UIApplicationDelegate {
                 print("Error requesting notification permission: \(error)")
             }
         }
+        
+        UNUserNotificationCenter.current().delegate = self 
         return true
     }
-
 }
+
 
 @main
 struct IntervalsApp: App {
