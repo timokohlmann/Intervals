@@ -4,17 +4,18 @@ import Combine
 class IntervalViewModel: ObservableObject {
     @Published var intervals: [Interval] = []
     
-    func addInterval(name: String, startDate: Date, frequencyType: FrequencyType, frequencyCount: Int) {
-        let newInterval = Interval(name: name, startDate: startDate, frequencyType: frequencyType, frequencyCount: frequencyCount)
+    func addInterval(name: String, startDate: Date, frequencyType: FrequencyType, frequencyCount: Int, includeTime: Bool) {
+        let newInterval = Interval(name: name, startDate: startDate, frequencyType: frequencyType, frequencyCount: frequencyCount, includeTime: includeTime)
         intervals.append(newInterval)
     }
     
-    func updateInterval(id: UUID, name: String, startDate: Date, frequencyType: FrequencyType, frequencyCount: Int) {
+    func updateInterval(id: UUID, name: String, startDate: Date, frequencyType: FrequencyType, frequencyCount: Int, includeTime: Bool) {
         if let index = intervals.firstIndex(where: { $0.id == id }) {
             intervals[index].name = name
             intervals[index].startDate = startDate
             intervals[index].frequencyType = frequencyType
             intervals[index].frequencyCount = frequencyCount
+            intervals[index].includeTime = includeTime
             intervals[index].updateNextDue()
         }
     }

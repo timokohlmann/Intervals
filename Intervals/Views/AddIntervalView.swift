@@ -1,6 +1,5 @@
 import SwiftUI
 
-
 struct AddEditIntervalView: View {
     @Environment(\.dismiss) var dismiss
     @ObservedObject var viewModel: IntervalViewModel
@@ -17,7 +16,7 @@ struct AddEditIntervalView: View {
         self.viewModel = viewModel
         _name = State(initialValue: interval?.name ?? "")
         _startDate = State(initialValue: interval?.startDate.removeTime() ?? Date())
-        _includeTime = State(initialValue: interval?.startDate.hasTime ?? false)
+        _includeTime = State(initialValue: interval?.includeTime ?? false)
         _startTime = State(initialValue: interval?.startDate ?? Date())
         _frequencyType = State(initialValue: interval?.frequencyType ?? .days)
         _frequencyCount = State(initialValue: interval?.frequencyCount ?? 1)
@@ -60,9 +59,9 @@ struct AddEditIntervalView: View {
                 trailing: Button("Save") {
                     let finalDate = includeTime ? startDate.setting(time: startTime) : startDate.removeTime()
                     if let id = intervalId {
-                        viewModel.updateInterval(id: id, name: name, startDate: finalDate, frequencyType: frequencyType, frequencyCount: frequencyCount)
+                        viewModel.updateInterval(id: id, name: name, startDate: finalDate, frequencyType: frequencyType, frequencyCount: frequencyCount, includeTime: includeTime)
                     } else {
-                        viewModel.addInterval(name: name, startDate: finalDate, frequencyType: frequencyType, frequencyCount: frequencyCount)
+                        viewModel.addInterval(name: name, startDate: finalDate, frequencyType: frequencyType, frequencyCount: frequencyCount, includeTime: includeTime)
                     }
                     dismiss()
                 }
@@ -72,7 +71,7 @@ struct AddEditIntervalView: View {
                 Button("Cancel", role: .cancel) { }
                 Button("Delete", role: .destructive) {
                     if let id = intervalId {
-                        viewModel.deleteInterval(Interval(id: id, name: "", startDate: Date(), frequencyType: .days, frequencyCount: 1))
+                        viewModel.deleteInterval(Interval(id: id, name: "", startDate: Date(), frequencyType: .days, frequencyCount: 1, includeTime: false))
                     }
                     dismiss()
                 }
@@ -87,11 +86,6 @@ extension Date {
     func removeTime() -> Date {
         let components = Calendar.current.dateComponents([.year, .month, .day], from: self)
         return Calendar.current.date(from: components) ?? self
-    }
-    
-    var hasTime: Bool {
-        let components = Calendar.current.dateComponents([.hour, .minute], from: self)
-        return components.hour != 0 || components.minute != 0
     }
     
     func setting(time: Date) -> Date {

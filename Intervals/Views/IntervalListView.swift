@@ -2,47 +2,47 @@ import SwiftUI
 
 struct IntervalListView: View {
     @StateObject private var viewModel = IntervalViewModel()
-    @State private var showingAddEditInterval = false
+    @State private var showingAddInterval = false
     @State private var selectedInterval: Interval?
 
     var body: some View {
         NavigationView {
             List {
                 ForEach(viewModel.intervals) { interval in
-                    IntervalRowView(interval: interval)
-                        .onTapGesture {
-                            selectedInterval = interval
-                            showingAddEditInterval = true
+                    NavigationLink(
+                        destination: AddEditIntervalView(viewModel: viewModel, interval: interval),
+                        label: {
+                            IntervalRowView(interval: interval)
                         }
-                        .swipeActions(edge: .trailing) {
-                            Button(role: .destructive) {
-                                viewModel.deleteInterval(interval)
-                            } label: {
-                                Label("Delete", systemImage: "trash")
-                            }
-                            
-                            Button {
-                                viewModel.markIntervalAsCompleted(interval.id)
-                            } label: {
-                                Label("Complete", systemImage: "checkmark")
-                            }
-                            .tint(.green)
+                    )
+                    .swipeActions(edge: .trailing) {
+                        Button(role: .destructive) {
+                            viewModel.deleteInterval(interval)
+                        } label: {
+                            Label("Delete", systemImage: "trash")
                         }
+                        
+                        Button {
+                            viewModel.markIntervalAsCompleted(interval.id)
+                        } label: {
+                            Label("Complete", systemImage: "checkmark")
+                        }
+                        .tint(.green)
+                    }
                 }
             }
             .navigationTitle("Intervals")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
-                        selectedInterval = nil
-                        showingAddEditInterval = true
+                        showingAddInterval = true
                     }) {
                         Image(systemName: "plus")
                     }
                 }
             }
-            .sheet(isPresented: $showingAddEditInterval) {
-                AddEditIntervalView(viewModel: viewModel, interval: selectedInterval)
+            .sheet(isPresented: $showingAddInterval) {
+                AddEditIntervalView(viewModel: viewModel)
             }
         }
     }
@@ -55,16 +55,22 @@ struct IntervalRowView: View {
         VStack(alignment: .leading) {
             Text(interval.name)
                 .font(.headline)
-            Text("Next due: \(interval.nextDue, formatter: itemFormatter)")
+            Text("Next due: \(formattedNextDue)")
                 .font(.subheadline)
                 .foregroundColor(.secondary)
         }
     }
+    
+    private var formattedNextDue: String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        
+        if interval.includeTime {
+            dateFormatter.timeStyle = .short
+            return dateFormatter.string(from: interval.nextDue)
+        } else {
+            return dateFormatter.string(from: interval.nextDue)
+        }
+    }
 }
 
-private let itemFormatter: DateFormatter = {
-    let formatter = DateFormatter()
-    formatter.dateStyle = .medium
-    formatter.timeStyle = .short
-    return formatter
-}()

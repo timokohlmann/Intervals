@@ -14,16 +14,17 @@ struct Interval: Identifiable, Codable {
     var frequencyCount: Int
     var lastCompleted: Date?
     var nextDue: Date
+    var includeTime: Bool  // New property
     
-    init(id: UUID = UUID(), name: String, startDate: Date, frequencyType: FrequencyType, frequencyCount: Int) {
+    init(id: UUID = UUID(), name: String, startDate: Date, frequencyType: FrequencyType, frequencyCount: Int, includeTime: Bool) {
         self.id = id
         self.name = name
         self.startDate = startDate
         self.frequencyType = frequencyType
         self.frequencyCount = frequencyCount
+        self.includeTime = includeTime
         self.nextDue = Self.calculateNextDue(from: startDate, frequencyType: frequencyType, frequencyCount: frequencyCount)
     }
-    
     mutating func updateNextDue() {
         let baseDate = lastCompleted ?? startDate
         nextDue = Self.calculateNextDue(from: baseDate, frequencyType: frequencyType, frequencyCount: frequencyCount)
