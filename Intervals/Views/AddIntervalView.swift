@@ -61,7 +61,7 @@ struct AddEditIntervalView: View {
             }
             .navigationTitle(intervalId == nil ? "Add Interval" : "Edit Interval")
             .navigationBarItems(
-                leading: Button("Cancel") { dismiss() },
+                leading: intervalId == nil ? Button("Cancel") { dismiss() } : nil,
                 trailing: intervalId == nil ? Button("Save") {
                     saveNewInterval()
                 }.disabled(name.isEmpty || frequencyCount == 0) : nil
@@ -93,6 +93,7 @@ struct AddEditIntervalView: View {
         dismiss()
     }
 }
+
 
 
 extension Date {
