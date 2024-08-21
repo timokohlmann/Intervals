@@ -14,7 +14,7 @@ struct Interval: Identifiable, Codable {
     var frequencyCount: Int
     var lastCompleted: Date?
     var nextDue: Date
-    var includeTime: Bool  // New property
+    var includeTime: Bool 
     
     init(id: UUID = UUID(), name: String, startDate: Date, frequencyType: FrequencyType, frequencyCount: Int, includeTime: Bool) {
         self.id = id
