@@ -21,26 +21,32 @@ struct Interval: Identifiable, Codable {
         self.startDate = startDate
         self.frequencyType = frequencyType
         self.frequencyCount = frequencyCount
-        self.nextDue = startDate
+        self.nextDue = Self.calculateNextDue(from: startDate, frequencyType: frequencyType, frequencyCount: frequencyCount)
     }
     
     mutating func updateNextDue() {
-        let calendar = Calendar.current
-        let dateToAddTo = lastCompleted ?? startDate
-        let dateComponent: Calendar.Component
-        switch frequencyType {
-        case .days:
-            dateComponent = .day
-        case .weeks:
-            dateComponent = .weekOfYear
-        case .months:
-            dateComponent = .month
-        }
-        nextDue = calendar.date(byAdding: dateComponent, value: frequencyCount, to: dateToAddTo) ?? startDate
+        let baseDate = lastCompleted ?? startDate
+        nextDue = Self.calculateNextDue(from: baseDate, frequencyType: frequencyType, frequencyCount: frequencyCount)
     }
     
     mutating func markAsCompleted() {
         lastCompleted = Date()
         updateNextDue()
+    }
+    
+    static func calculateNextDue(from date: Date, frequencyType: FrequencyType, frequencyCount: Int) -> Date {
+        let calendar = Calendar.current
+        let components: DateComponents
+        
+        switch frequencyType {
+        case .days:
+            components = DateComponents(day: frequencyCount)
+        case .weeks:
+            components = DateComponents(day: frequencyCount * 7)
+        case .months:
+            components = DateComponents(month: frequencyCount)
+        }
+        
+        return calendar.date(byAdding: components, to: date) ?? date
     }
 }

@@ -16,14 +16,8 @@ struct AddEditIntervalView: View {
     init(viewModel: IntervalViewModel, interval: Interval? = nil) {
         self.viewModel = viewModel
         _name = State(initialValue: interval?.name ?? "")
-        _startDate = State(initialValue: interval?.startDate.removeTimeIfMidnight() ?? Date())
-        _includeTime = State(initialValue: {
-            if let interval = interval {
-                let midnightDate = interval.startDate.removeTimeIfMidnight()
-                return !midnightDate.timeIntervalSince(interval.startDate).isZero
-            }
-            return false
-        }())
+        _startDate = State(initialValue: interval?.startDate.removeTime() ?? Date())
+        _includeTime = State(initialValue: interval?.startDate.hasTime ?? false)
         _startTime = State(initialValue: interval?.startDate ?? Date())
         _frequencyType = State(initialValue: interval?.frequencyType ?? .days)
         _frequencyCount = State(initialValue: interval?.frequencyCount ?? 1)
@@ -64,7 +58,7 @@ struct AddEditIntervalView: View {
             .navigationBarItems(
                 leading: Button("Cancel") { dismiss() },
                 trailing: Button("Save") {
-                    let finalDate = includeTime ? startDate.setting(time: startTime) : startDate
+                    let finalDate = includeTime ? startDate.setting(time: startTime) : startDate.removeTime()
                     if let id = intervalId {
                         viewModel.updateInterval(id: id, name: name, startDate: finalDate, frequencyType: frequencyType, frequencyCount: frequencyCount)
                     } else {
@@ -90,12 +84,14 @@ struct AddEditIntervalView: View {
 }
 
 extension Date {
-    func removeTimeIfMidnight() -> Date {
-        let components = Calendar.current.dateComponents([.hour, .minute, .second], from: self)
-        if components.hour == 0 && components.minute == 0 && components.second == 0 {
-            return Calendar.current.startOfDay(for: self)
-        }
-        return self
+    func removeTime() -> Date {
+        let components = Calendar.current.dateComponents([.year, .month, .day], from: self)
+        return Calendar.current.date(from: components) ?? self
+    }
+    
+    var hasTime: Bool {
+        let components = Calendar.current.dateComponents([.hour, .minute], from: self)
+        return components.hour != 0 || components.minute != 0
     }
     
     func setting(time: Date) -> Date {
