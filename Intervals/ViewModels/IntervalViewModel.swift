@@ -20,8 +20,8 @@ class IntervalViewModel: ObservableObject {
     }
     
     func deleteInterval(_ interval: Interval) {
-        intervals.removeAll { $0.id == interval.id}
-    }
+           intervals.removeAll { $0.id == interval.id }
+       }
     
     func markIntervalAsCompleted(_ intervalId: UUID) {
           if let index = intervals.firstIndex(where: { $0.id == intervalId }) {
