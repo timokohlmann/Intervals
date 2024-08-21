@@ -44,8 +44,14 @@ struct AddEditIntervalView: View {
                 
                 Stepper("Every \(frequencyCount) \(frequencyType.rawValue.lowercased())", value: $frequencyCount, in: 1...365)
                 
-                if intervalId != nil {
+                if let id = intervalId {
+                    // Editing an existing interval
                     Section {
+                        Button("Update Interval") {
+                            updateInterval()
+                        }
+                        .foregroundColor(.green)
+                        
                         Button("Remove Interval") {
                             showingDeleteConfirmation = true
                         }
@@ -56,16 +62,9 @@ struct AddEditIntervalView: View {
             .navigationTitle(intervalId == nil ? "Add Interval" : "Edit Interval")
             .navigationBarItems(
                 leading: Button("Cancel") { dismiss() },
-                trailing: Button("Save") {
-                    let finalDate = includeTime ? startDate.setting(time: startTime) : startDate.removeTime()
-                    if let id = intervalId {
-                        viewModel.updateInterval(id: id, name: name, startDate: finalDate, frequencyType: frequencyType, frequencyCount: frequencyCount, includeTime: includeTime)
-                    } else {
-                        viewModel.addInterval(name: name, startDate: finalDate, frequencyType: frequencyType, frequencyCount: frequencyCount, includeTime: includeTime)
-                    }
-                    dismiss()
-                }
-                .disabled(name.isEmpty || frequencyCount == 0)
+                trailing: intervalId == nil ? Button("Save") {
+                    saveNewInterval()
+                }.disabled(name.isEmpty || frequencyCount == 0) : nil
             )
             .alert("Are you sure?", isPresented: $showingDeleteConfirmation) {
                 Button("Cancel", role: .cancel) { }
@@ -80,7 +79,21 @@ struct AddEditIntervalView: View {
             }
         }
     }
+
+    private func saveNewInterval() {
+        let finalDate = includeTime ? startDate.setting(time: startTime) : startDate.removeTime()
+        viewModel.addInterval(name: name, startDate: finalDate, frequencyType: frequencyType, frequencyCount: frequencyCount, includeTime: includeTime)
+        dismiss()
+    }
+
+    private func updateInterval() {
+        guard let id = intervalId else { return }
+        let finalDate = includeTime ? startDate.setting(time: startTime) : startDate.removeTime()
+        viewModel.updateInterval(id: id, name: name, startDate: finalDate, frequencyType: frequencyType, frequencyCount: frequencyCount, includeTime: includeTime)
+        dismiss()
+    }
 }
+
 
 extension Date {
     func removeTime() -> Date {

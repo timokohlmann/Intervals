@@ -16,18 +16,15 @@ struct IntervalListView: View {
                         }
                     )
                     .swipeActions(edge: .trailing) {
-                        Button(role: .destructive) {
-                            viewModel.deleteInterval(interval)
-                        } label: {
-                            Label("Delete", systemImage: "trash")
-                        }
-                        
+                        // Remove the Complete button here
+                        /*
                         Button {
                             viewModel.markIntervalAsCompleted(interval.id)
                         } label: {
                             Label("Complete", systemImage: "checkmark")
                         }
                         .tint(.green)
+                        */
                     }
                 }
             }
