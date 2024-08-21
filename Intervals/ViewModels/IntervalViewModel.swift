@@ -1,8 +1,35 @@
 import Foundation
 import Combine
+import UserNotifications
+
 
 class IntervalViewModel: ObservableObject {
     @Published var intervals: [Interval] = []
+    
+    
+    
+    
+    func scheduleNotification(for interval: Interval) {
+           let content = UNMutableNotificationContent()
+           content.title = "Task Due: \(interval.name)"
+           content.body = "It's time to complete your task."
+           content.sound = .default
+
+         
+           let triggerDate = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: interval.nextDue)
+           let trigger = UNCalendarNotificationTrigger(dateMatching: triggerDate, repeats: false)
+
+           let request = UNNotificationRequest(identifier: interval.id.uuidString, content: content, trigger: trigger)
+
+         
+           UNUserNotificationCenter.current().add(request) { error in
+               if let error = error {
+                   print("Failed to schedule notification: \(error.localizedDescription)")
+               } else {
+                   print("Notification scheduled for \(interval.name) on \(interval.nextDue)")
+               }
+           }
+       }
     
     func addInterval(name: String, startDate: Date, frequencyType: FrequencyType, frequencyCount: Int, includeTime: Bool) {
         let newInterval = Interval(name: name, startDate: startDate, frequencyType: frequencyType, frequencyCount: frequencyCount, includeTime: includeTime)
@@ -17,12 +44,17 @@ class IntervalViewModel: ObservableObject {
             intervals[index].frequencyCount = frequencyCount
             intervals[index].includeTime = includeTime
             intervals[index].updateNextDue()
+            
+            
+            UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [id.uuidString])
+                        scheduleNotification(for: intervals[index])
         }
     }
     
     func deleteInterval(_ interval: Interval) {
-           intervals.removeAll { $0.id == interval.id }
-       }
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [interval.id.uuidString])
+        intervals.removeAll { $0.id == interval.id }
+    }
     
     func markIntervalAsCompleted(_ intervalId: UUID) {
           if let index = intervals.firstIndex(where: { $0.id == intervalId }) {
