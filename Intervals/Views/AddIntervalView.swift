@@ -34,6 +34,9 @@ struct AddEditIntervalView: View {
                 
                 if includeTime {
                     DatePicker("Start Time", selection: $startTime, displayedComponents: .hourAndMinute)
+                        .onChange(of: startTime) { newValue in
+                            print("Start time changed to: \(newValue)")
+                        }
                 }
                 
                 Picker("Frequency Type", selection: $frequencyType) {
@@ -44,8 +47,8 @@ struct AddEditIntervalView: View {
                 
                 Stepper("Every \(frequencyCount) \(frequencyType.rawValue.lowercased())", value: $frequencyCount, in: 1...365)
                 
-                if let id = intervalId {
-                    // Editing an existing interval
+                if intervalId != nil {
+                  
                     Section {
                         Button("Update Interval") {
                             updateInterval()
@@ -58,6 +61,8 @@ struct AddEditIntervalView: View {
                         .foregroundColor(.red)
                     }
                 }
+
+
             }
             .navigationTitle(intervalId == nil ? "Add Interval" : "Edit Interval")
             .navigationBarItems(
@@ -82,10 +87,24 @@ struct AddEditIntervalView: View {
 
     private func saveNewInterval() {
         print("saveNewInterval called")
+        
+        // Calculate final date without manual timezone conversion
         let finalDate = includeTime ? startDate.setting(time: startTime) : startDate.removeTime()
+
+        // Debug: Print the final date in the local timezone
+        let dateFormatter = DateFormatter()
+        dateFormatter.timeZone = TimeZone.current
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .short
+        let localDateString = dateFormatter.string(from: finalDate)
+        print("Final local date to be saved: \(localDateString)")
+        
+        // Save the interval
         viewModel.addInterval(name: name, startDate: finalDate, frequencyType: frequencyType, frequencyCount: frequencyCount, includeTime: includeTime)
         dismiss()
     }
+
+
 
     private func updateInterval() {
         print("updateInterval called")
@@ -112,4 +131,5 @@ extension Date {
         components.minute = timeComponents.minute
         return calendar.date(from: components) ?? self
     }
+
 }
