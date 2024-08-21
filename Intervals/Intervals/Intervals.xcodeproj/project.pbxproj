@@ -7,42 +7,42 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		BE06A2B72C74ED88008F9C1D /* IntervalsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE06A2B62C74ED88008F9C1D /* IntervalsApp.swift */; };
-		BE06A2B92C74ED88008F9C1D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE06A2B82C74ED88008F9C1D /* ContentView.swift */; };
-		BE06A2BB2C74ED8A008F9C1D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BE06A2BA2C74ED8A008F9C1D /* Assets.xcassets */; };
-		BE06A2BE2C74ED8A008F9C1D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BE06A2BD2C74ED8A008F9C1D /* Preview Assets.xcassets */; };
-		BE06A2CA2C74EEFE008F9C1D /* Interval.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE06A2C92C74EEFE008F9C1D /* Interval.swift */; };
-		BE06A2CC2C74EF13008F9C1D /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE06A2CB2C74EF13008F9C1D /* User.swift */; };
-		BE06A2CE2C74EF2F008F9C1D /* IntervalListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE06A2CD2C74EF2F008F9C1D /* IntervalListView.swift */; };
-		BE06A2D02C74EF4F008F9C1D /* AddIntervalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE06A2CF2C74EF4F008F9C1D /* AddIntervalView.swift */; };
-		BE06A2D22C74EF5B008F9C1D /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE06A2D12C74EF5B008F9C1D /* SettingsView.swift */; };
-		BE06A2D42C74EF71008F9C1D /* InternalViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE06A2D32C74EF71008F9C1D /* InternalViewModel.swift */; };
-		BE06A2D62C74EF82008F9C1D /* UserViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE06A2D52C74EF82008F9C1D /* UserViewModel.swift */; };
-		BE06A2D82C74EF96008F9C1D /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE06A2D72C74EF96008F9C1D /* NotificationService.swift */; };
-		BE06A2DA2C74EFA1008F9C1D /* SharingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE06A2D92C74EFA1008F9C1D /* SharingService.swift */; };
-		BE06A2DC2C74EFB0008F9C1D /* DateHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE06A2DB2C74EFB0008F9C1D /* DateHelpers.swift */; };
+		BEA74C672C7502FD00F7FE8B /* IntervalsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA74C662C7502FD00F7FE8B /* IntervalsApp.swift */; };
+		BEA74C6B2C7502FF00F7FE8B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BEA74C6A2C7502FF00F7FE8B /* Assets.xcassets */; };
+		BEA74C6E2C7502FF00F7FE8B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BEA74C6D2C7502FF00F7FE8B /* Preview Assets.xcassets */; };
+		BEA74C852C75036B00F7FE8B /* Interval.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA74C742C75036B00F7FE8B /* Interval.swift */; };
+		BEA74C862C75036B00F7FE8B /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA74C752C75036B00F7FE8B /* User.swift */; };
+		BEA74C872C75036B00F7FE8B /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA74C772C75036B00F7FE8B /* NotificationService.swift */; };
+		BEA74C882C75036B00F7FE8B /* SharingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA74C782C75036B00F7FE8B /* SharingService.swift */; };
+		BEA74C892C75036B00F7FE8B /* IntervalViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA74C7A2C75036B00F7FE8B /* IntervalViewModel.swift */; };
+		BEA74C8A2C75036B00F7FE8B /* UserViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA74C7B2C75036B00F7FE8B /* UserViewModel.swift */; };
+		BEA74C8B2C75036B00F7FE8B /* DateHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA74C7D2C75036B00F7FE8B /* DateHelpers.swift */; };
+		BEA74C8C2C75036B00F7FE8B /* AddIntervalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA74C7F2C75036B00F7FE8B /* AddIntervalView.swift */; };
+		BEA74C8D2C75036B00F7FE8B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA74C802C75036B00F7FE8B /* ContentView.swift */; };
+		BEA74C8E2C75036B00F7FE8B /* IntervalListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA74C812C75036B00F7FE8B /* IntervalListView.swift */; };
+		BEA74C8F2C75036B00F7FE8B /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA74C822C75036B00F7FE8B /* SettingsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		BE06A2B32C74ED88008F9C1D /* Intervals.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Intervals.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		BE06A2B62C74ED88008F9C1D /* IntervalsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntervalsApp.swift; sourceTree = "<group>"; };
-		BE06A2B82C74ED88008F9C1D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		BE06A2BA2C74ED8A008F9C1D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		BE06A2BD2C74ED8A008F9C1D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		BE06A2C92C74EEFE008F9C1D /* Interval.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Interval.swift; sourceTree = "<group>"; };
-		BE06A2CB2C74EF13008F9C1D /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
-		BE06A2CD2C74EF2F008F9C1D /* IntervalListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntervalListView.swift; sourceTree = "<group>"; };
-		BE06A2CF2C74EF4F008F9C1D /* AddIntervalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddIntervalView.swift; sourceTree = "<group>"; };
-		BE06A2D12C74EF5B008F9C1D /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
-		BE06A2D32C74EF71008F9C1D /* InternalViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternalViewModel.swift; sourceTree = "<group>"; };
-		BE06A2D52C74EF82008F9C1D /* UserViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserViewModel.swift; sourceTree = "<group>"; };
-		BE06A2D72C74EF96008F9C1D /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
-		BE06A2D92C74EFA1008F9C1D /* SharingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharingService.swift; sourceTree = "<group>"; };
-		BE06A2DB2C74EFB0008F9C1D /* DateHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateHelpers.swift; sourceTree = "<group>"; };
+		BEA74C632C7502FD00F7FE8B /* Intervals.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Intervals.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BEA74C662C7502FD00F7FE8B /* IntervalsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntervalsApp.swift; sourceTree = "<group>"; };
+		BEA74C6A2C7502FF00F7FE8B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		BEA74C6D2C7502FF00F7FE8B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		BEA74C742C75036B00F7FE8B /* Interval.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Interval.swift; sourceTree = "<group>"; };
+		BEA74C752C75036B00F7FE8B /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		BEA74C772C75036B00F7FE8B /* NotificationService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		BEA74C782C75036B00F7FE8B /* SharingService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharingService.swift; sourceTree = "<group>"; };
+		BEA74C7A2C75036B00F7FE8B /* IntervalViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntervalViewModel.swift; sourceTree = "<group>"; };
+		BEA74C7B2C75036B00F7FE8B /* UserViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserViewModel.swift; sourceTree = "<group>"; };
+		BEA74C7D2C75036B00F7FE8B /* DateHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateHelpers.swift; sourceTree = "<group>"; };
+		BEA74C7F2C75036B00F7FE8B /* AddIntervalView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddIntervalView.swift; sourceTree = "<group>"; };
+		BEA74C802C75036B00F7FE8B /* ContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		BEA74C812C75036B00F7FE8B /* IntervalListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntervalListView.swift; sourceTree = "<group>"; };
+		BEA74C822C75036B00F7FE8B /* SettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		BE06A2B02C74ED88008F9C1D /* Frameworks */ = {
+		BEA74C602C7502FD00F7FE8B /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -52,101 +52,106 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		BE06A2AA2C74ED88008F9C1D = {
+		BEA74C5A2C7502FD00F7FE8B = {
 			isa = PBXGroup;
 			children = (
-				BE06A2C82C74EE4D008F9C1D /* Helpers */,
-				BE06A2C72C74EE45008F9C1D /* Services */,
-				BE06A2C62C74EE3C008F9C1D /* ViewModels */,
-				BE06A2C52C74EE33008F9C1D /* Views */,
-				BE06A2C42C74EE28008F9C1D /* Models */,
-				BE06A2B52C74ED88008F9C1D /* Intervals */,
-				BE06A2B42C74ED88008F9C1D /* Products */,
+				BEA74C7E2C75036B00F7FE8B /* Helpers */,
+				BEA74C762C75036B00F7FE8B /* Models */,
+				BEA74C792C75036B00F7FE8B /* Services */,
+				BEA74C7C2C75036B00F7FE8B /* ViewModels */,
+				BEA74C832C75036B00F7FE8B /* Views */,
+				BEA74C652C7502FD00F7FE8B /* Intervals */,
+				BEA74C642C7502FD00F7FE8B /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		BE06A2B42C74ED88008F9C1D /* Products */ = {
+		BEA74C642C7502FD00F7FE8B /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				BE06A2B32C74ED88008F9C1D /* Intervals.app */,
+				BEA74C632C7502FD00F7FE8B /* Intervals.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		BE06A2B52C74ED88008F9C1D /* Intervals */ = {
+		BEA74C652C7502FD00F7FE8B /* Intervals */ = {
 			isa = PBXGroup;
 			children = (
-				BE06A2B62C74ED88008F9C1D /* IntervalsApp.swift */,
-				BE06A2BA2C74ED8A008F9C1D /* Assets.xcassets */,
-				BE06A2BC2C74ED8A008F9C1D /* Preview Content */,
+				BEA74C662C7502FD00F7FE8B /* IntervalsApp.swift */,
+				BEA74C6A2C7502FF00F7FE8B /* Assets.xcassets */,
+				BEA74C6C2C7502FF00F7FE8B /* Preview Content */,
 			);
 			path = Intervals;
 			sourceTree = "<group>";
 		};
-		BE06A2BC2C74ED8A008F9C1D /* Preview Content */ = {
+		BEA74C6C2C7502FF00F7FE8B /* Preview Content */ = {
 			isa = PBXGroup;
 			children = (
-				BE06A2BD2C74ED8A008F9C1D /* Preview Assets.xcassets */,
+				BEA74C6D2C7502FF00F7FE8B /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
-		BE06A2C42C74EE28008F9C1D /* Models */ = {
+		BEA74C762C75036B00F7FE8B /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				BE06A2C92C74EEFE008F9C1D /* Interval.swift */,
-				BE06A2CB2C74EF13008F9C1D /* User.swift */,
+				BEA74C742C75036B00F7FE8B /* Interval.swift */,
+				BEA74C752C75036B00F7FE8B /* User.swift */,
 			);
-			path = Models;
+			name = Models;
+			path = ../Models;
 			sourceTree = "<group>";
 		};
-		BE06A2C52C74EE33008F9C1D /* Views */ = {
+		BEA74C792C75036B00F7FE8B /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				BE06A2B82C74ED88008F9C1D /* ContentView.swift */,
-				BE06A2CD2C74EF2F008F9C1D /* IntervalListView.swift */,
-				BE06A2CF2C74EF4F008F9C1D /* AddIntervalView.swift */,
-				BE06A2D12C74EF5B008F9C1D /* SettingsView.swift */,
+				BEA74C772C75036B00F7FE8B /* NotificationService.swift */,
+				BEA74C782C75036B00F7FE8B /* SharingService.swift */,
 			);
-			path = Views;
+			name = Services;
+			path = ../Services;
 			sourceTree = "<group>";
 		};
-		BE06A2C62C74EE3C008F9C1D /* ViewModels */ = {
+		BEA74C7C2C75036B00F7FE8B /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
-				BE06A2D32C74EF71008F9C1D /* InternalViewModel.swift */,
-				BE06A2D52C74EF82008F9C1D /* UserViewModel.swift */,
+				BEA74C7A2C75036B00F7FE8B /* IntervalViewModel.swift */,
+				BEA74C7B2C75036B00F7FE8B /* UserViewModel.swift */,
 			);
-			path = ViewModels;
+			name = ViewModels;
+			path = ../ViewModels;
 			sourceTree = "<group>";
 		};
-		BE06A2C72C74EE45008F9C1D /* Services */ = {
+		BEA74C7E2C75036B00F7FE8B /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				BE06A2D72C74EF96008F9C1D /* NotificationService.swift */,
-				BE06A2D92C74EFA1008F9C1D /* SharingService.swift */,
+				BEA74C7D2C75036B00F7FE8B /* DateHelpers.swift */,
 			);
-			path = Services;
+			name = Helpers;
+			path = ../Helpers;
 			sourceTree = "<group>";
 		};
-		BE06A2C82C74EE4D008F9C1D /* Helpers */ = {
+		BEA74C832C75036B00F7FE8B /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				BE06A2DB2C74EFB0008F9C1D /* DateHelpers.swift */,
+				BEA74C7F2C75036B00F7FE8B /* AddIntervalView.swift */,
+				BEA74C802C75036B00F7FE8B /* ContentView.swift */,
+				BEA74C812C75036B00F7FE8B /* IntervalListView.swift */,
+				BEA74C822C75036B00F7FE8B /* SettingsView.swift */,
 			);
-			path = Helpers;
+			name = Views;
+			path = ../Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		BE06A2B22C74ED88008F9C1D /* Intervals */ = {
+		BEA74C622C7502FD00F7FE8B /* Intervals */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = BE06A2C12C74ED8A008F9C1D /* Build configuration list for PBXNativeTarget "Intervals" */;
+			buildConfigurationList = BEA74C712C7502FF00F7FE8B /* Build configuration list for PBXNativeTarget "Intervals" */;
 			buildPhases = (
-				BE06A2AF2C74ED88008F9C1D /* Sources */,
-				BE06A2B02C74ED88008F9C1D /* Frameworks */,
-				BE06A2B12C74ED88008F9C1D /* Resources */,
+				BEA74C5F2C7502FD00F7FE8B /* Sources */,
+				BEA74C602C7502FD00F7FE8B /* Frameworks */,
+				BEA74C612C7502FD00F7FE8B /* Resources */,
 			);
 			buildRules = (
 			);
@@ -154,25 +159,25 @@
 			);
 			name = Intervals;
 			productName = Intervals;
-			productReference = BE06A2B32C74ED88008F9C1D /* Intervals.app */;
+			productReference = BEA74C632C7502FD00F7FE8B /* Intervals.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		BE06A2AB2C74ED88008F9C1D /* Project object */ = {
+		BEA74C5B2C7502FD00F7FE8B /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1540;
 				LastUpgradeCheck = 1540;
 				TargetAttributes = {
-					BE06A2B22C74ED88008F9C1D = {
+					BEA74C622C7502FD00F7FE8B = {
 						CreatedOnToolsVersion = 15.4;
 					};
 				};
 			};
-			buildConfigurationList = BE06A2AE2C74ED88008F9C1D /* Build configuration list for PBXProject "Intervals" */;
+			buildConfigurationList = BEA74C5E2C7502FD00F7FE8B /* Build configuration list for PBXProject "Intervals" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -180,52 +185,52 @@
 				en,
 				Base,
 			);
-			mainGroup = BE06A2AA2C74ED88008F9C1D;
-			productRefGroup = BE06A2B42C74ED88008F9C1D /* Products */;
+			mainGroup = BEA74C5A2C7502FD00F7FE8B;
+			productRefGroup = BEA74C642C7502FD00F7FE8B /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				BE06A2B22C74ED88008F9C1D /* Intervals */,
+				BEA74C622C7502FD00F7FE8B /* Intervals */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		BE06A2B12C74ED88008F9C1D /* Resources */ = {
+		BEA74C612C7502FD00F7FE8B /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BE06A2BE2C74ED8A008F9C1D /* Preview Assets.xcassets in Resources */,
-				BE06A2BB2C74ED8A008F9C1D /* Assets.xcassets in Resources */,
+				BEA74C6E2C7502FF00F7FE8B /* Preview Assets.xcassets in Resources */,
+				BEA74C6B2C7502FF00F7FE8B /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		BE06A2AF2C74ED88008F9C1D /* Sources */ = {
+		BEA74C5F2C7502FD00F7FE8B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BE06A2D22C74EF5B008F9C1D /* SettingsView.swift in Sources */,
-				BE06A2CE2C74EF2F008F9C1D /* IntervalListView.swift in Sources */,
-				BE06A2CC2C74EF13008F9C1D /* User.swift in Sources */,
-				BE06A2D42C74EF71008F9C1D /* InternalViewModel.swift in Sources */,
-				BE06A2B92C74ED88008F9C1D /* ContentView.swift in Sources */,
-				BE06A2DC2C74EFB0008F9C1D /* DateHelpers.swift in Sources */,
-				BE06A2B72C74ED88008F9C1D /* IntervalsApp.swift in Sources */,
-				BE06A2CA2C74EEFE008F9C1D /* Interval.swift in Sources */,
-				BE06A2D62C74EF82008F9C1D /* UserViewModel.swift in Sources */,
-				BE06A2D82C74EF96008F9C1D /* NotificationService.swift in Sources */,
-				BE06A2D02C74EF4F008F9C1D /* AddIntervalView.swift in Sources */,
-				BE06A2DA2C74EFA1008F9C1D /* SharingService.swift in Sources */,
+				BEA74C892C75036B00F7FE8B /* IntervalViewModel.swift in Sources */,
+				BEA74C8E2C75036B00F7FE8B /* IntervalListView.swift in Sources */,
+				BEA74C8D2C75036B00F7FE8B /* ContentView.swift in Sources */,
+				BEA74C8A2C75036B00F7FE8B /* UserViewModel.swift in Sources */,
+				BEA74C882C75036B00F7FE8B /* SharingService.swift in Sources */,
+				BEA74C862C75036B00F7FE8B /* User.swift in Sources */,
+				BEA74C8C2C75036B00F7FE8B /* AddIntervalView.swift in Sources */,
+				BEA74C672C7502FD00F7FE8B /* IntervalsApp.swift in Sources */,
+				BEA74C872C75036B00F7FE8B /* NotificationService.swift in Sources */,
+				BEA74C852C75036B00F7FE8B /* Interval.swift in Sources */,
+				BEA74C8B2C75036B00F7FE8B /* DateHelpers.swift in Sources */,
+				BEA74C8F2C75036B00F7FE8B /* SettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		BE06A2BF2C74ED8A008F9C1D /* Debug */ = {
+		BEA74C6F2C7502FF00F7FE8B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -288,7 +293,7 @@
 			};
 			name = Debug;
 		};
-		BE06A2C02C74ED8A008F9C1D /* Release */ = {
+		BEA74C702C7502FF00F7FE8B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -344,7 +349,7 @@
 			};
 			name = Release;
 		};
-		BE06A2C22C74ED8A008F9C1D /* Debug */ = {
+		BEA74C722C7502FF00F7FE8B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -373,7 +378,7 @@
 			};
 			name = Debug;
 		};
-		BE06A2C32C74ED8A008F9C1D /* Release */ = {
+		BEA74C732C7502FF00F7FE8B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -405,25 +410,25 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		BE06A2AE2C74ED88008F9C1D /* Build configuration list for PBXProject "Intervals" */ = {
+		BEA74C5E2C7502FD00F7FE8B /* Build configuration list for PBXProject "Intervals" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				BE06A2BF2C74ED8A008F9C1D /* Debug */,
-				BE06A2C02C74ED8A008F9C1D /* Release */,
+				BEA74C6F2C7502FF00F7FE8B /* Debug */,
+				BEA74C702C7502FF00F7FE8B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		BE06A2C12C74ED8A008F9C1D /* Build configuration list for PBXNativeTarget "Intervals" */ = {
+		BEA74C712C7502FF00F7FE8B /* Build configuration list for PBXNativeTarget "Intervals" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				BE06A2C22C74ED8A008F9C1D /* Debug */,
-				BE06A2C32C74ED8A008F9C1D /* Release */,
+				BEA74C722C7502FF00F7FE8B /* Debug */,
+				BEA74C732C7502FF00F7FE8B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = BE06A2AB2C74ED88008F9C1D /* Project object */;
+	rootObject = BEA74C5B2C7502FD00F7FE8B /* Project object */;
 }
