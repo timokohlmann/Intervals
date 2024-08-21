@@ -20,10 +20,11 @@ class IntervalViewModel: ObservableObject {
     }
     
     func markIntervalAsCompleted(_ intervalId: UUID) {
-          if let index = intervals.firstIndex(where: { $0.id == intervalId }) {
-              intervals[index].markAsCompleted()
-          }
-      }
+           if let index = intervals.firstIndex(where: { $0.id == intervalId }) {
+               intervals[index].markAsCompleted()
+               updateInterval(intervals[index])
+           }
+       }
       
       func updateAllDueDates() {
           for index in intervals.indices {
