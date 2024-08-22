@@ -12,11 +12,12 @@ class IntervalViewModel: ObservableObject {
         content.body = "It's time to complete your task."
         content.sound = .default
 
-        // Ensure the date is treated as local time
         let triggerDate = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: interval.nextDue)
 
-        // Log the trigger date to verify it's correct
-        print("Notification scheduled for \(interval.name) at \(interval.nextDue)")
+        print("Scheduling notification for \(interval.name):")
+        print("  ID: \(interval.id.uuidString)")
+        print("  Next due: \(interval.nextDue)")
+        print("  Trigger components: \(triggerDate)")
 
         let trigger = UNCalendarNotificationTrigger(dateMatching: triggerDate, repeats: false)
         let request = UNNotificationRequest(identifier: interval.id.uuidString, content: content, trigger: trigger)
@@ -30,6 +31,16 @@ class IntervalViewModel: ObservableObject {
                 print("Failed to schedule notification: \(error.localizedDescription)")
             } else {
                 print("Notification successfully scheduled for \(interval.name) at \(interval.nextDue)")
+            }
+        }
+
+        // Check pending notifications
+        UNUserNotificationCenter.current().getPendingNotificationRequests { requests in
+            print("Current pending notifications: \(requests.count)")
+            for request in requests {
+                if let trigger = request.trigger as? UNCalendarNotificationTrigger {
+                    print("  - \(request.identifier): \(trigger.dateComponents)")
+                }
             }
         }
     }
@@ -57,6 +68,9 @@ class IntervalViewModel: ObservableObject {
     
     func updateInterval(id: UUID, name: String, startDate: Date, frequencyType: FrequencyType, frequencyCount: Int, includeTime: Bool) {
         if let index = intervals.firstIndex(where: { $0.id == id }) {
+            print("Updating interval: \(intervals[index].name)")
+            print("Old nextDue: \(intervals[index].nextDue)")
+            
             // Update the interval details
             intervals[index].name = name
             intervals[index].startDate = startDate
@@ -67,7 +81,6 @@ class IntervalViewModel: ObservableObject {
             // Recalculate nextDue date
             intervals[index].updateNextDue()
 
-            // Log the updated nextDue date for debugging
             print("Updated interval nextDue: \(intervals[index].nextDue)")
 
             // Remove the old notification
