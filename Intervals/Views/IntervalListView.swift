@@ -3,7 +3,6 @@ import SwiftUI
 struct IntervalListView: View {
     @StateObject private var viewModel = IntervalViewModel()
     @State private var showingAddInterval = false
-    @State private var selectedInterval: Interval?
 
     var body: some View {
         NavigationView {
@@ -15,7 +14,6 @@ struct IntervalListView: View {
                             IntervalRowView(interval: interval)
                         }
                     )
-                
                 }
             }
             .navigationTitle("Intervals")
@@ -51,13 +49,7 @@ struct IntervalRowView: View {
     private var formattedNextDue: String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
-        
-        if interval.includeTime {
-            dateFormatter.timeStyle = .short
-            return dateFormatter.string(from: interval.nextDue)
-        } else {
-            return dateFormatter.string(from: interval.nextDue)
-        }
+        dateFormatter.timeStyle = interval.includeTime ? .short : .none
+        return dateFormatter.string(from: interval.nextDue)
     }
 }
-

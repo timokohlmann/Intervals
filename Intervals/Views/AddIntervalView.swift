@@ -1,7 +1,5 @@
 import SwiftUI
 
-import SwiftUI
-
 struct AddEditIntervalView: View {
     @Environment(\.dismiss) var dismiss
     @ObservedObject var viewModel: IntervalViewModel
@@ -23,24 +21,18 @@ struct AddEditIntervalView: View {
         _frequencyType = State(initialValue: interval?.frequencyType ?? .days)
         _frequencyCount = State(initialValue: interval?.frequencyCount ?? 1)
         _intervalId = State(initialValue: interval?.id)
-        
-        print("Initializing AddEditIntervalView with interval: \(interval?.name ?? "New Interval")")
     }
 
     var body: some View {
         NavigationView {
             Form {
                 TextField("Interval Name", text: $name)
-                
                 DatePicker("Start Date", selection: $startDate, displayedComponents: .date)
-                
                 Toggle("Include Time", isOn: $includeTime)
                 
                 if includeTime {
                     DatePicker("Start Time", selection: $startTime, displayedComponents: .hourAndMinute)
-                        .onChange(of: startTime) { newValue in
-                            print("Start time changed to: \(newValue)")
-                        }
+                        .onChange(of: startTime) { _, _ in }
                 }
                 
                 Picker("Frequency Type", selection: $frequencyType) {
@@ -87,40 +79,14 @@ struct AddEditIntervalView: View {
     }
 
     private func saveNewInterval() {
-        print("saveNewInterval called")
-        
         let finalDate = includeTime ? startDate.setting(time: startTime) : startDate.removeTime()
-
-        let dateFormatter = DateFormatter()
-        dateFormatter.timeZone = TimeZone.current
-        dateFormatter.dateStyle = .medium
-        dateFormatter.timeStyle = .short
-        let localDateString = dateFormatter.string(from: finalDate)
-        print("Final local date to be saved: \(localDateString)")
-        
         viewModel.addInterval(name: name, startDate: finalDate, frequencyType: frequencyType, frequencyCount: frequencyCount, includeTime: includeTime)
-        print("New interval added: \(name), Next due: \(finalDate)")
         dismiss()
     }
 
     private func updateInterval() {
-        print("updateInterval called")
-        guard let id = intervalId else {
-            print("Error: No interval ID found for update")
-            return
-        }
+        guard let id = intervalId else { return }
         let finalDate = includeTime ? startDate.setting(time: startTime) : startDate.removeTime()
-        
-        let dateFormatter = DateFormatter()
-        dateFormatter.timeZone = TimeZone.current
-        dateFormatter.dateStyle = .medium
-        dateFormatter.timeStyle = .short
-        let localDateString = dateFormatter.string(from: finalDate)
-        print("Updating interval: \(name)")
-        print("New start date: \(localDateString)")
-        print("Frequency: Every \(frequencyCount) \(frequencyType.rawValue.lowercased())")
-        print("Include time: \(includeTime)")
-        
         viewModel.updateInterval(id: id, name: name, startDate: finalDate, frequencyType: frequencyType, frequencyCount: frequencyCount, includeTime: includeTime)
         dismiss()
     }
