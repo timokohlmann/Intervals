@@ -27,13 +27,12 @@ struct AddEditIntervalView: View {
         NavigationView {
             Form {
                 TextField("Interval Name", text: $name)
-                
                 DatePicker("Start Date", selection: $startDate, displayedComponents: .date)
-                
                 Toggle("Include Time", isOn: $includeTime)
                 
                 if includeTime {
                     DatePicker("Start Time", selection: $startTime, displayedComponents: .hourAndMinute)
+                        .onChange(of: startTime) { _, _ in }
                 }
                 
                 Picker("Frequency Type", selection: $frequencyType) {
@@ -44,8 +43,7 @@ struct AddEditIntervalView: View {
                 
                 Stepper("Every \(frequencyCount) \(frequencyType.rawValue.lowercased())", value: $frequencyCount, in: 1...365)
                 
-                if let id = intervalId {
-                    // Editing an existing interval
+                if intervalId != nil {
                     Section {
                         Button("Update Interval") {
                             updateInterval()
@@ -93,8 +91,6 @@ struct AddEditIntervalView: View {
         dismiss()
     }
 }
-
-
 
 extension Date {
     func removeTime() -> Date {
