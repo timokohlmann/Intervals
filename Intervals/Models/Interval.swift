@@ -33,6 +33,8 @@ struct Interval: Identifiable, Codable {
     }
 
     mutating func updateNextDue() {
+        print("Updating next due date for \(name)")
+        print("Current nextDue: \(nextDue)")
         let calendar = Calendar.current
         let components: DateComponents
         switch frequencyType {
@@ -43,12 +45,13 @@ struct Interval: Identifiable, Codable {
         case .months:
             components = DateComponents(month: frequencyCount)
         }
-        if let lastCompleted = lastCompleted {
+        // Use startDate instead of lastCompleted for the initial calculation
+        nextDue = calendar.date(byAdding: components, to: startDate) ?? startDate
+        // If lastCompleted exists and is after the calculated nextDue, recalculate from lastCompleted
+        if let lastCompleted = lastCompleted, lastCompleted > nextDue {
             nextDue = calendar.date(byAdding: components, to: lastCompleted) ?? startDate
-        } else {
-            nextDue = calendar.date(byAdding: components, to: startDate) ?? startDate
         }
-        print("Updated nextDue for \(name): \(nextDue)")
+        print("Updated nextDue: \(nextDue)")
     }
 
     static func calculateNextDue(from date: Date, frequencyType: FrequencyType, frequencyCount: Int) -> Date {
