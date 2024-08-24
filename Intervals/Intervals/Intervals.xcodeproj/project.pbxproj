@@ -21,7 +21,20 @@
 		BEA74C8D2C75036B00F7FE8B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA74C802C75036B00F7FE8B /* ContentView.swift */; };
 		BEA74C8E2C75036B00F7FE8B /* IntervalListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA74C812C75036B00F7FE8B /* IntervalListView.swift */; };
 		BEA74C8F2C75036B00F7FE8B /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA74C822C75036B00F7FE8B /* SettingsView.swift */; };
+		BEA74C952C79B8FD00F7FE8B /* pr-title-check.yml in Resources */ = {isa = PBXBuildFile; fileRef = BEA74C912C79B8FD00F7FE8B /* pr-title-check.yml */; };
+		BEA74C962C79B8FD00F7FE8B /* swift.yml in Resources */ = {isa = PBXBuildFile; fileRef = BEA74C922C79B8FD00F7FE8B /* swift.yml */; };
+		BEA74C9E2C79BA1B00F7FE8B /* IntervalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA74C9D2C79BA1B00F7FE8B /* IntervalTests.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		BEA74C9F2C79BA1B00F7FE8B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BEA74C5B2C7502FD00F7FE8B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BEA74C622C7502FD00F7FE8B;
+			remoteInfo = Intervals;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		BEA74C632C7502FD00F7FE8B /* Intervals.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Intervals.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -39,10 +52,21 @@
 		BEA74C802C75036B00F7FE8B /* ContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		BEA74C812C75036B00F7FE8B /* IntervalListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntervalListView.swift; sourceTree = "<group>"; };
 		BEA74C822C75036B00F7FE8B /* SettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		BEA74C912C79B8FD00F7FE8B /* pr-title-check.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; path = "pr-title-check.yml"; sourceTree = "<group>"; };
+		BEA74C922C79B8FD00F7FE8B /* swift.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; path = swift.yml; sourceTree = "<group>"; };
+		BEA74C9B2C79BA1B00F7FE8B /* IntervalTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = IntervalTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		BEA74C9D2C79BA1B00F7FE8B /* IntervalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntervalTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		BEA74C602C7502FD00F7FE8B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BEA74C982C79BA1B00F7FE8B /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -55,12 +79,14 @@
 		BEA74C5A2C7502FD00F7FE8B = {
 			isa = PBXGroup;
 			children = (
+				BEA74C942C79B8FD00F7FE8B /* .github */,
 				BEA74C7E2C75036B00F7FE8B /* Helpers */,
 				BEA74C762C75036B00F7FE8B /* Models */,
 				BEA74C792C75036B00F7FE8B /* Services */,
 				BEA74C7C2C75036B00F7FE8B /* ViewModels */,
 				BEA74C832C75036B00F7FE8B /* Views */,
 				BEA74C652C7502FD00F7FE8B /* Intervals */,
+				BEA74C9C2C79BA1B00F7FE8B /* IntervalTests */,
 				BEA74C642C7502FD00F7FE8B /* Products */,
 			);
 			sourceTree = "<group>";
@@ -69,6 +95,7 @@
 			isa = PBXGroup;
 			children = (
 				BEA74C632C7502FD00F7FE8B /* Intervals.app */,
+				BEA74C9B2C79BA1B00F7FE8B /* IntervalTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -142,6 +169,32 @@
 			path = ../Views;
 			sourceTree = "<group>";
 		};
+		BEA74C932C79B8FD00F7FE8B /* workflows */ = {
+			isa = PBXGroup;
+			children = (
+				BEA74C912C79B8FD00F7FE8B /* pr-title-check.yml */,
+				BEA74C922C79B8FD00F7FE8B /* swift.yml */,
+			);
+			path = workflows;
+			sourceTree = "<group>";
+		};
+		BEA74C942C79B8FD00F7FE8B /* .github */ = {
+			isa = PBXGroup;
+			children = (
+				BEA74C932C79B8FD00F7FE8B /* workflows */,
+			);
+			name = .github;
+			path = ../.github;
+			sourceTree = "<group>";
+		};
+		BEA74C9C2C79BA1B00F7FE8B /* IntervalTests */ = {
+			isa = PBXGroup;
+			children = (
+				BEA74C9D2C79BA1B00F7FE8B /* IntervalTests.swift */,
+			);
+			path = IntervalTests;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -162,6 +215,24 @@
 			productReference = BEA74C632C7502FD00F7FE8B /* Intervals.app */;
 			productType = "com.apple.product-type.application";
 		};
+		BEA74C9A2C79BA1B00F7FE8B /* IntervalTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BEA74CA12C79BA1B00F7FE8B /* Build configuration list for PBXNativeTarget "IntervalTests" */;
+			buildPhases = (
+				BEA74C972C79BA1B00F7FE8B /* Sources */,
+				BEA74C982C79BA1B00F7FE8B /* Frameworks */,
+				BEA74C992C79BA1B00F7FE8B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				BEA74CA02C79BA1B00F7FE8B /* PBXTargetDependency */,
+			);
+			name = IntervalTests;
+			productName = IntervalTests;
+			productReference = BEA74C9B2C79BA1B00F7FE8B /* IntervalTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -174,6 +245,10 @@
 				TargetAttributes = {
 					BEA74C622C7502FD00F7FE8B = {
 						CreatedOnToolsVersion = 15.4;
+					};
+					BEA74C9A2C79BA1B00F7FE8B = {
+						CreatedOnToolsVersion = 15.4;
+						TestTargetID = BEA74C622C7502FD00F7FE8B;
 					};
 				};
 			};
@@ -191,6 +266,7 @@
 			projectRoot = "";
 			targets = (
 				BEA74C622C7502FD00F7FE8B /* Intervals */,
+				BEA74C9A2C79BA1B00F7FE8B /* IntervalTests */,
 			);
 		};
 /* End PBXProject section */
@@ -200,8 +276,17 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BEA74C952C79B8FD00F7FE8B /* pr-title-check.yml in Resources */,
 				BEA74C6E2C7502FF00F7FE8B /* Preview Assets.xcassets in Resources */,
+				BEA74C962C79B8FD00F7FE8B /* swift.yml in Resources */,
 				BEA74C6B2C7502FF00F7FE8B /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BEA74C992C79BA1B00F7FE8B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -227,7 +312,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		BEA74C972C79BA1B00F7FE8B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BEA74C9E2C79BA1B00F7FE8B /* IntervalTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		BEA74CA02C79BA1B00F7FE8B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BEA74C622C7502FD00F7FE8B /* Intervals */;
+			targetProxy = BEA74C9F2C79BA1B00F7FE8B /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		BEA74C6F2C7502FF00F7FE8B /* Debug */ = {
@@ -407,6 +508,42 @@
 			};
 			name = Release;
 		};
+		BEA74CA22C79BA1B00F7FE8B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5D2DW472PL;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.timokohlmann.IntervalTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Intervals.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Intervals";
+			};
+			name = Debug;
+		};
+		BEA74CA32C79BA1B00F7FE8B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5D2DW472PL;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.timokohlmann.IntervalTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Intervals.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Intervals";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -424,6 +561,15 @@
 			buildConfigurations = (
 				BEA74C722C7502FF00F7FE8B /* Debug */,
 				BEA74C732C7502FF00F7FE8B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BEA74CA12C79BA1B00F7FE8B /* Build configuration list for PBXNativeTarget "IntervalTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BEA74CA22C79BA1B00F7FE8B /* Debug */,
+				BEA74CA32C79BA1B00F7FE8B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
