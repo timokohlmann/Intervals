@@ -1,0 +1,44 @@
+name: PR Title Check
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+jobs:
+  check-pr-title:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      # Check PR title format
+      - name: Check PR title format
+        id: pr_title
+        run: |
+          PR_TITLE=$(jq -r '.pull_request.title' "$GITHUB_EVENT_PATH")
+          if [[ ! "$PR_TITLE" =~ ^\#[0-9]+\ .+\:.+$ ]]; then
+            echo "PR title does not match the required format: #<number> <type>: <description>"
+            echo "::set-output name=pr_title_error::1"
+            exit 1
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Only run semantic PR action if the title is correct
+      - name: Semantic PR check
+        if: steps.pr_title.outputs.pr_title_error != '1'
+        uses: amannn/action-semantic-pull-request@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          types: |
+            feat
+            fix
+            docs
+            style
+            refactor
+            perf
+            test
+            build
+            ci
+            chore
+          requireScope: false
