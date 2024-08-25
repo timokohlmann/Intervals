@@ -3,7 +3,42 @@ import Combine
 import UserNotifications
 
 class IntervalViewModel: ObservableObject {
-    @Published var intervals: [Interval] = []
+    @Published var intervals: [Interval] = [] {
+        didSet {
+            saveIntervals()
+        }
+    }
+    
+    private let saveKey = "savedIntervals"
+    
+    init() {
+        loadIntervals()
+    }
+    
+    private func saveIntervals() {
+        do {
+            let data = try JSONEncoder().encode(intervals)
+            if let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+                let fileURL = documentsDirectory.appendingPathComponent(saveKey)
+                try data.write(to: fileURL)
+            }
+        } catch {
+            print("Failed to save intervals: \(error)")
+        }
+    }
+    
+    private func loadIntervals() {
+        if let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+            let fileURL = documentsDirectory.appendingPathComponent(saveKey)
+            do {
+                let data = try Data(contentsOf: fileURL)
+                intervals = try JSONDecoder().decode([Interval].self, from: data)
+            } catch {
+                print("Failed to load intervals: \(error)")
+                intervals = []
+            }
+        }
+    }
     
     func scheduleNotification(for interval: Interval) {
         let content = UNMutableNotificationContent()
