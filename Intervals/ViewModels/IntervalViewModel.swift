@@ -1,6 +1,14 @@
 import Foundation
 import Combine
 import UserNotifications
+import os
+
+enum IntervalError: Error {
+    case saveFailed
+    case loadFailed
+    case notificationPermissionDenied
+    case notificationScheduleFailed
+}
 
 class IntervalViewModel: ObservableObject {
     @Published var intervals: [Interval] = [] {
@@ -8,9 +16,11 @@ class IntervalViewModel: ObservableObject {
             saveIntervals()
         }
     }
+    @Published var errorMessage: String?
     
     private let saveKey = "savedIntervals"
-    
+    private let logger = Logger(subsystem: "com.timokohlmann.Intervals", category: "IntervalViewModel")
+
     init() {
         loadIntervals()
     }
@@ -23,7 +33,8 @@ class IntervalViewModel: ObservableObject {
                 try data.write(to: fileURL)
             }
         } catch {
-            print("Failed to save intervals: \(error)")
+            logger.error("Failed to save intervals: \(error.localizedDescription)")
+            self.errorMessage = "Failed to save your intervals. Please try again."
         }
     }
     
@@ -34,13 +45,40 @@ class IntervalViewModel: ObservableObject {
                 let data = try Data(contentsOf: fileURL)
                 intervals = try JSONDecoder().decode([Interval].self, from: data)
             } catch {
-                print("Failed to load intervals: \(error)")
+                logger.error("Failed to load intervals: \(error.localizedDescription)")
+                self.errorMessage = "Failed to load your intervals. Please try restarting the app."
                 intervals = []
             }
         }
     }
     
     func scheduleNotification(for interval: Interval) {
+        UNUserNotificationCenter.current().getNotificationSettings { settings in
+            switch settings.authorizationStatus {
+            case .authorized, .provisional:
+                self.createAndScheduleNotification(for: interval)
+            case .notDetermined:
+                self.requestNotificationPermission { granted in
+                    if granted {
+                        self.createAndScheduleNotification(for: interval)
+                    } else {
+                        self.handleNotificationPermissionDenied()
+                    }
+                }
+            case .denied:
+                self.handleNotificationPermissionDenied()
+            case .ephemeral:
+                // Handle ephemeral authorization status (used for App Clips)
+                self.logger.warning("Ephemeral notification authorization status")
+                self.createAndScheduleNotification(for: interval)
+            @unknown default:
+                self.logger.warning("Unknown notification authorization status")
+                self.errorMessage = "Unknown notification settings. Please check your device settings."
+            }
+        }
+    }
+    
+    private func createAndScheduleNotification(for interval: Interval) {
         let content = UNMutableNotificationContent()
         content.title = "Task Due: \(interval.name)"
         content.body = "It's time to complete your task."
@@ -54,9 +92,27 @@ class IntervalViewModel: ObservableObject {
         
         UNUserNotificationCenter.current().add(request) { error in
             if let error = error {
-                print("Failed to schedule notification: \(error.localizedDescription)")
+                self.logger.error("Failed to schedule notification: \(error.localizedDescription)")
+                self.errorMessage = "Failed to schedule notification. Please check your device settings."
             }
         }
+    }
+    
+    private func requestNotificationPermission(completion: @escaping (Bool) -> Void) {
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
+            if let error = error {
+                self.logger.error("Error requesting notification permission: \(error.localizedDescription)")
+                self.errorMessage = "Failed to request notification permission. Please try again."
+                completion(false)
+            } else {
+                completion(granted)
+            }
+        }
+    }
+    
+    private func handleNotificationPermissionDenied() {
+        logger.warning("Notification permission denied")
+        self.errorMessage = "Notifications are disabled. Please enable them in Settings to receive reminders."
     }
     
     func addInterval(name: String, startDate: Date, frequencyType: FrequencyType, frequencyCount: Int, includeTime: Bool) {
@@ -87,12 +143,14 @@ class IntervalViewModel: ObservableObject {
     func markIntervalAsCompleted(_ intervalId: UUID) {
         if let index = intervals.firstIndex(where: { $0.id == intervalId }) {
             intervals[index].markAsCompleted()
+            scheduleNotification(for: intervals[index])
         }
     }
       
     func updateAllDueDates() {
         for index in intervals.indices {
             intervals[index].updateNextDue()
+            scheduleNotification(for: intervals[index])
         }
     }
       
