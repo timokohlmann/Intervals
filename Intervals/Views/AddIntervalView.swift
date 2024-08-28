@@ -45,7 +45,7 @@ struct AddEditIntervalView: View {
                 
                 if intervalId != nil {
                     Section {
-                        Button("Update Interval") {
+                        Button("Save Changes") {
                             updateInterval()
                         }
                         .foregroundColor(.green)
@@ -58,6 +58,7 @@ struct AddEditIntervalView: View {
                 }
             }
             .navigationTitle(intervalId == nil ? "Add Interval" : "Edit Interval")
+            .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(
                 leading: intervalId == nil ? Button("Cancel") { dismiss() } : nil,
                 trailing: intervalId == nil ? Button("Save") {
