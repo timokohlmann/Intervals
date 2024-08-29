@@ -86,8 +86,22 @@ struct AddEditIntervalView: View {
     }
 
     private func updateInterval() {
-        guard let id = intervalId else { return }
-        let finalDate = includeTime ? startDate.setting(time: startTime) : startDate.removeTime()
+        guard let id = intervalId, let interval = viewModel.intervals.first(where: { $0.id == id }) else { return }
+        
+        let calendar = Calendar.current
+        var components = calendar.dateComponents([.year, .month, .day], from: interval.startDate)
+        
+        if includeTime {
+            let timeComponents = calendar.dateComponents([.hour, .minute], from: startTime)
+            components.hour = timeComponents.hour
+            components.minute = timeComponents.minute
+        } else {
+            components.hour = 0
+            components.minute = 0
+        }
+        
+        let finalDate = calendar.date(from: components) ?? interval.startDate
+        
         viewModel.updateInterval(id: id, name: name, startDate: finalDate, frequencyType: frequencyType, frequencyCount: frequencyCount, includeTime: includeTime)
         dismiss()
     }
