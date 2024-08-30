@@ -6,6 +6,12 @@ enum FrequencyType: String, CaseIterable, Codable {
     case months = "Months"
 }
 
+enum IntervalStatus: Codable {
+    case normal
+    case overdue
+    case completing
+}
+
 struct Interval: Identifiable, Codable {
     let id: UUID
     var name: String
@@ -15,6 +21,7 @@ struct Interval: Identifiable, Codable {
     var lastCompleted: Date?
     var nextDue: Date
     var includeTime: Bool
+    var status: IntervalStatus = .normal
 
     init(id: UUID = UUID(), name: String, startDate: Date, frequencyType: FrequencyType, frequencyCount: Int, includeTime: Bool) {
         self.id = id
@@ -23,13 +30,13 @@ struct Interval: Identifiable, Codable {
         self.frequencyType = frequencyType
         self.frequencyCount = frequencyCount
         self.includeTime = includeTime
-        self.nextDue = startDate // Initial calculation of nextDue
+        self.nextDue = startDate 
     }
 
     mutating func markAsCompleted() {
-        // Mark the interval as completed
         self.lastCompleted = Date()
         updateNextDue()
+        self.status = .normal
     }
 
     mutating func updateNextDue() {
@@ -57,7 +64,7 @@ struct Interval: Identifiable, Codable {
     static func calculateNextDue(from date: Date, frequencyType: FrequencyType, frequencyCount: Int) -> Date {
         let calendar = Calendar.current
         let components: DateComponents
-        
+
         switch frequencyType {
         case .days:
             components = DateComponents(day: frequencyCount)
