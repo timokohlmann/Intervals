@@ -21,7 +21,7 @@ class IntervalViewModel: ObservableObject {
     }
 
     private func setupPublishers() {
-        Timer.publish(every: 60, on: .main, in: .common)
+        Timer.publish(every: 3, on: .main, in: .common)
             .autoconnect()
             .sink { [weak self] _ in
                 self?.checkOverdueIntervals()
