@@ -3,13 +3,6 @@ import Combine
 import UserNotifications
 import os
 
-enum IntervalError: Error {
-    case saveFailed
-    case loadFailed
-    case notificationPermissionDenied
-    case notificationScheduleFailed
-}
-
 class IntervalViewModel: ObservableObject {
     @Published var intervals: [Interval] = [] {
         didSet {
@@ -20,21 +13,15 @@ class IntervalViewModel: ObservableObject {
 
     private let saveKey = "savedIntervals"
     private let logger = Logger(subsystem: "com.timokohlmann.Intervals", category: "IntervalViewModel")
-    private var timer: Timer?
     private var cancellables = Set<AnyCancellable>()
 
     init() {
         loadIntervals()
-        startTimer()
         setupPublishers()
     }
 
-    deinit {
-        timer?.invalidate()
-    }
-
     private func setupPublishers() {
-        Timer.publish(every: 1, on: .main, in: .common)
+        Timer.publish(every: 60, on: .main, in: .common)
             .autoconnect()
             .sink { [weak self] _ in
                 self?.checkOverdueIntervals()
@@ -42,20 +29,29 @@ class IntervalViewModel: ObservableObject {
             .store(in: &cancellables)
     }
 
-    private func startTimer() {
-        timer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { [weak self] _ in
-            self?.updateAllDueDates()
-        }
-    }
-
     private func checkOverdueIntervals() {
         let now = Date()
         for index in intervals.indices {
-            if intervals[index].nextDue <= now && intervals[index].status == .normal {
+            let interval = intervals[index]
+            if interval.nextDue <= now && interval.status == .normal {
                 DispatchQueue.main.async {
                     self.intervals[index].status = .overdue
+                    self.scheduleNotification(for: self.intervals[index])
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 43200) { // 12 hours
+                        if self.intervals[index].status == .overdue {
+                            self.updateNextDueDate(for: self.intervals[index])
+                        }
+                    }
                 }
             }
+        }
+    }
+
+    private func updateNextDueDate(for interval: Interval) {
+        if let index = intervals.firstIndex(where: { $0.id == interval.id }) {
+            intervals[index].updateNextDue()
+            scheduleNotification(for: intervals[index])
         }
     }
 
@@ -181,15 +177,14 @@ class IntervalViewModel: ObservableObject {
             intervals[index].status = .completing
             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                 self.intervals[index].markAsCompleted()
-                self.scheduleNotification(for: self.intervals[index])
+                self.updateNextDueDate(for: self.intervals[index])
             }
         }
     }
 
     func updateAllDueDates() {
-        for index in intervals.indices {
-            intervals[index].updateNextDue()
-            scheduleNotification(for: intervals[index])
+        for interval in intervals where interval.status != .overdue {
+            updateNextDueDate(for: interval)
         }
     }
 

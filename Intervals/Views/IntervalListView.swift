@@ -71,11 +71,11 @@ struct IntervalStatusView: View {
             case .normal:
                 EmptyView()
             case .overdue:
-                Image(systemName: "exclamationmark.circle.fill")
+                Image(systemName: "clock.badge.exclamationmark")
                     .foregroundColor(.orange)
                     .onTapGesture {
                         withAnimation(.easeInOut(duration: 0.5)) {
-                            animationAmount = 1
+                            animationAmount = 1.5
                             viewModel.markIntervalAsCompleted(interval.id)
                         }
                     }
@@ -83,7 +83,7 @@ struct IntervalStatusView: View {
                 Image(systemName: "checkmark.circle.fill")
                     .foregroundColor(.green)
                     .scaleEffect(animationAmount)
-                    .animation(.easeOut(duration: 2), value: animationAmount)
+                    .animation(.easeOut(duration: 1), value: animationAmount)
                     .onAppear {
                         animationAmount = 0
                     }

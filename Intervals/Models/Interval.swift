@@ -30,7 +30,7 @@ struct Interval: Identifiable, Codable {
         self.frequencyType = frequencyType
         self.frequencyCount = frequencyCount
         self.includeTime = includeTime
-        self.nextDue = startDate 
+        self.nextDue = startDate // Initial calculation of nextDue
     }
 
     mutating func markAsCompleted() {
