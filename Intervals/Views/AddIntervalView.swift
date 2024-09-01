@@ -87,7 +87,7 @@ struct AddEditIntervalView: View {
 
     private func updateInterval() {
         guard let id = intervalId,
-              let interval = viewModel.intervals.first(where: { $0.id == id }) else { return }
+              let _ = viewModel.intervals.first(where: { $0.id == id }) else { return }
         
         let calendar = Calendar.current
         var components = calendar.dateComponents([.year, .month, .day], from: startDate)
