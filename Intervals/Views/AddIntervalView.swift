@@ -32,7 +32,6 @@ struct AddEditIntervalView: View {
                 
                 if includeTime {
                     DatePicker("Start Time", selection: $startTime, displayedComponents: .hourAndMinute)
-                        .onChange(of: startTime) { _, _ in }
                 }
                 
                 Picker("Frequency Type", selection: $frequencyType) {
@@ -41,7 +40,14 @@ struct AddEditIntervalView: View {
                     }
                 }
                 
-                Stepper("Every \(frequencyCount) \(frequencyType.rawValue.lowercased())", value: $frequencyCount, in: 1...365)
+                Stepper(value: $frequencyCount, in: 1...365) {
+                                    HStack(spacing: 0) {
+                                        Text("Every ")
+                                        Text("\(frequencyCount)")
+                                            .fontWeight(.bold)
+                                        Text(" \(frequencyType.rawValue.lowercased().dropLast(frequencyCount == 1 ? 1 : 0))")
+                                    }
+                                }
                 
                 if intervalId != nil {
                     Section {
@@ -87,27 +93,13 @@ struct AddEditIntervalView: View {
 
     private func updateInterval() {
         guard let id = intervalId,
-              let interval = viewModel.intervals.first(where: { $0.id == id }) else { return }
+              let _ = viewModel.intervals.first(where: { $0.id == id }) else { return }
         
-        let calendar = Calendar.current
-        var components = calendar.dateComponents([.year, .month, .day], from: startDate)
-        
-        if includeTime {
-            let timeComponents = calendar.dateComponents([.hour, .minute], from: startTime)
-            components.hour = timeComponents.hour
-            components.minute = timeComponents.minute
-        }
-        
-        
-        let finalDate = calendar.date(from: components) ?? startDate
+        let finalDate = includeTime ? startDate.setting(time: startTime) : startDate.removeTime()
         
         viewModel.updateInterval(id: id, name: name, startDate: finalDate, frequencyType: frequencyType, frequencyCount: frequencyCount, includeTime: includeTime)
         dismiss()
     }
-
-
-
-
 }
 
 extension Date {
