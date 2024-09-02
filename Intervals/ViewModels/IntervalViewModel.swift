@@ -108,26 +108,13 @@ class IntervalViewModel: ObservableObject {
         }
     }
 
-    private func getNotificationDate(for interval: Interval) -> Date {
-        if interval.includeTime {
-            return interval.nextDue
-        } else {
-            let calendar = Calendar.current
-            var components = calendar.dateComponents([.year, .month, .day], from: interval.nextDue)
-            components.hour = 9 // Set to 9:00 AM
-            components.minute = 0
-            return calendar.date(from: components) ?? interval.nextDue
-        }
-    }
-
     private func createAndScheduleNotification(for interval: Interval) {
         let content = UNMutableNotificationContent()
         content.title = "Task Due: \(interval.name)"
         content.body = "It's time to complete your task."
         content.sound = .default
 
-        let notificationDate = getNotificationDate(for: interval)
-        let triggerDate = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: notificationDate)
+        let triggerDate = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: interval.nextDue)
         let trigger = UNCalendarNotificationTrigger(dateMatching: triggerDate, repeats: false)
         let request = UNNotificationRequest(identifier: interval.id.uuidString, content: content, trigger: trigger)
 
@@ -160,19 +147,18 @@ class IntervalViewModel: ObservableObject {
         self.errorMessage = "Notifications are disabled. Please enable them in Settings to receive reminders."
     }
 
-    func addInterval(name: String, startDate: Date, frequencyType: FrequencyType, frequencyCount: Int, includeTime: Bool) {
-        let newInterval = Interval(name: name, startDate: startDate, frequencyType: frequencyType, frequencyCount: frequencyCount, includeTime: includeTime)
+    func addInterval(name: String, startDate: Date, frequencyType: FrequencyType, frequencyCount: Int) {
+        let newInterval = Interval(name: name, startDate: startDate, frequencyType: frequencyType, frequencyCount: frequencyCount)
         intervals.append(newInterval)
         scheduleNotification(for: newInterval)
     }
 
-    func updateInterval(id: UUID, name: String, startDate: Date, frequencyType: FrequencyType, frequencyCount: Int, includeTime: Bool) {
+    func updateInterval(id: UUID, name: String, startDate: Date, frequencyType: FrequencyType, frequencyCount: Int) {
         if let index = intervals.firstIndex(where: { $0.id == id }) {
             intervals[index].name = name
             intervals[index].startDate = startDate
             intervals[index].frequencyType = frequencyType
             intervals[index].frequencyCount = frequencyCount
-            intervals[index].includeTime = includeTime
             intervals[index].updateNextDue()
 
             scheduleNotification(for: intervals[index])
