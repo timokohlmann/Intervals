@@ -5,7 +5,7 @@ struct AddEditIntervalView: View {
     @ObservedObject var viewModel: IntervalViewModel
     @State private var name: String
     @State private var startDate: Date
-    @State private var startTime: Date
+    @State private var reminderTime: Date
     @State private var frequencyType: FrequencyType
     @State private var frequencyCount: Int
     @State private var intervalId: UUID?
@@ -14,8 +14,8 @@ struct AddEditIntervalView: View {
     init(viewModel: IntervalViewModel, interval: Interval? = nil) {
         self.viewModel = viewModel
         _name = State(initialValue: interval?.name ?? "")
-        _startDate = State(initialValue: interval?.startDate ?? Date())
-        _startTime = State(initialValue: interval?.startDate ?? Self.getDefaultStartTime())
+        _startDate = State(initialValue: interval?.startDate.removeTime() ?? Date().removeTime())
+        _reminderTime = State(initialValue: interval?.startDate ?? Self.getDefaultReminderTime())
         _frequencyType = State(initialValue: interval?.frequencyType ?? .days)
         _frequencyCount = State(initialValue: interval?.frequencyCount ?? 1)
         _intervalId = State(initialValue: interval?.id)
@@ -26,7 +26,7 @@ struct AddEditIntervalView: View {
             Form {
                 TextField("Interval Name", text: $name)
                 DatePicker("Start Date", selection: $startDate, displayedComponents: .date)
-                DatePicker("Reminder Time", selection: $startTime, displayedComponents: .hourAndMinute)
+                DatePicker("Reminder Time", selection: $reminderTime, displayedComponents: .hourAndMinute)
                 
                 Picker("Frequency Type", selection: $frequencyType) {
                     ForEach(FrequencyType.allCases, id: \.self) { type in
@@ -80,7 +80,7 @@ struct AddEditIntervalView: View {
     }
 
     private func saveNewInterval() {
-        let finalDate = combineDateAndTime(date: startDate, time: startTime)
+        let finalDate = combineDateAndTime(date: startDate, time: reminderTime)
         viewModel.addInterval(name: name, startDate: finalDate, frequencyType: frequencyType, frequencyCount: frequencyCount)
         dismiss()
     }
@@ -88,7 +88,7 @@ struct AddEditIntervalView: View {
     private func updateInterval() {
         guard let id = intervalId else { return }
         
-        let finalDate = combineDateAndTime(date: startDate, time: startTime)
+        let finalDate = combineDateAndTime(date: startDate, time: reminderTime)
         
         viewModel.updateInterval(id: id, name: name, startDate: finalDate, frequencyType: frequencyType, frequencyCount: frequencyCount)
         dismiss()
@@ -109,22 +109,24 @@ struct AddEditIntervalView: View {
         return calendar.date(from: combinedComponents) ?? date
     }
 
-    static func getDefaultStartTime() -> Date {
+    static func getDefaultReminderTime() -> Date {
         let calendar = Calendar.current
         let now = Date()
         let defaultHour = 9
         let defaultMinute = 0
         
-        var components = calendar.dateComponents([.year, .month, .day], from: now)
+        var components = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: now)
         components.hour = defaultHour
         components.minute = defaultMinute
         
-        let defaultTime = calendar.date(from: components)!
-        
-        if defaultTime > now {
-            return defaultTime
-        } else {
-            return calendar.date(byAdding: .day, value: 1, to: defaultTime)!
-        }
+        return calendar.date(from: components) ?? now
+    }
+}
+
+extension Date {
+    func removeTime() -> Date {
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.year, .month, .day], from: self)
+        return calendar.date(from: components) ?? self
     }
 }
