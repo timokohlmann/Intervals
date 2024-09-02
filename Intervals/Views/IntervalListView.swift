@@ -54,7 +54,7 @@ struct IntervalRowView: View {
     private var formattedNextDue: String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
-        dateFormatter.timeStyle = interval.includeTime ? .short : .none
+        dateFormatter.timeStyle = .short
         return dateFormatter.string(from: interval.nextDue)
     }
 }

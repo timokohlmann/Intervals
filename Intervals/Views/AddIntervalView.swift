@@ -5,7 +5,6 @@ struct AddEditIntervalView: View {
     @ObservedObject var viewModel: IntervalViewModel
     @State private var name: String
     @State private var startDate: Date
-    @State private var includeTime: Bool
     @State private var startTime: Date
     @State private var frequencyType: FrequencyType
     @State private var frequencyCount: Int
@@ -15,9 +14,8 @@ struct AddEditIntervalView: View {
     init(viewModel: IntervalViewModel, interval: Interval? = nil) {
         self.viewModel = viewModel
         _name = State(initialValue: interval?.name ?? "")
-        _startDate = State(initialValue: interval?.startDate.removeTime() ?? Date())
-        _includeTime = State(initialValue: interval?.includeTime ?? false)
-        _startTime = State(initialValue: interval?.startDate ?? Date())
+        _startDate = State(initialValue: interval?.startDate ?? Date())
+        _startTime = State(initialValue: interval?.startDate ?? Self.getDefaultStartTime())
         _frequencyType = State(initialValue: interval?.frequencyType ?? .days)
         _frequencyCount = State(initialValue: interval?.frequencyCount ?? 1)
         _intervalId = State(initialValue: interval?.id)
@@ -28,11 +26,7 @@ struct AddEditIntervalView: View {
             Form {
                 TextField("Interval Name", text: $name)
                 DatePicker("Start Date", selection: $startDate, displayedComponents: .date)
-                Toggle("Include Time", isOn: $includeTime)
-                
-                if includeTime {
-                    DatePicker("Start Time", selection: $startTime, displayedComponents: .hourAndMinute)
-                }
+                DatePicker("Reminder Time", selection: $startTime, displayedComponents: .hourAndMinute)
                 
                 Picker("Frequency Type", selection: $frequencyType) {
                     ForEach(FrequencyType.allCases, id: \.self) { type in
@@ -41,13 +35,13 @@ struct AddEditIntervalView: View {
                 }
                 
                 Stepper(value: $frequencyCount, in: 1...365) {
-                                    HStack(spacing: 0) {
-                                        Text("Every ")
-                                        Text("\(frequencyCount)")
-                                            .fontWeight(.bold)
-                                        Text(" \(frequencyType.rawValue.lowercased().dropLast(frequencyCount == 1 ? 1 : 0))")
-                                    }
-                                }
+                    HStack(spacing: 0) {
+                        Text("Every ")
+                        Text("\(frequencyCount)")
+                            .fontWeight(.bold)
+                        Text(" \(frequencyType.rawValue.lowercased().dropLast(frequencyCount == 1 ? 1 : 0))")
+                    }
+                }
                 
                 if intervalId != nil {
                     Section {
@@ -75,7 +69,7 @@ struct AddEditIntervalView: View {
                 Button("Cancel", role: .cancel) { }
                 Button("Delete", role: .destructive) {
                     if let id = intervalId {
-                        viewModel.deleteInterval(Interval(id: id, name: "", startDate: Date(), frequencyType: .days, frequencyCount: 1, includeTime: false))
+                        viewModel.deleteInterval(Interval(id: id, name: "", startDate: Date(), frequencyType: .days, frequencyCount: 1))
                     }
                     dismiss()
                 }
@@ -86,34 +80,51 @@ struct AddEditIntervalView: View {
     }
 
     private func saveNewInterval() {
-        let finalDate = includeTime ? startDate.setting(time: startTime) : startDate.removeTime()
-        viewModel.addInterval(name: name, startDate: finalDate, frequencyType: frequencyType, frequencyCount: frequencyCount, includeTime: includeTime)
+        let finalDate = combineDateAndTime(date: startDate, time: startTime)
+        viewModel.addInterval(name: name, startDate: finalDate, frequencyType: frequencyType, frequencyCount: frequencyCount)
         dismiss()
     }
 
     private func updateInterval() {
-        guard let id = intervalId,
-              let _ = viewModel.intervals.first(where: { $0.id == id }) else { return }
+        guard let id = intervalId else { return }
         
-        let finalDate = includeTime ? startDate.setting(time: startTime) : startDate.removeTime()
+        let finalDate = combineDateAndTime(date: startDate, time: startTime)
         
-        viewModel.updateInterval(id: id, name: name, startDate: finalDate, frequencyType: frequencyType, frequencyCount: frequencyCount, includeTime: includeTime)
+        viewModel.updateInterval(id: id, name: name, startDate: finalDate, frequencyType: frequencyType, frequencyCount: frequencyCount)
         dismiss()
     }
-}
 
-extension Date {
-    func removeTime() -> Date {
-        let components = Calendar.current.dateComponents([.year, .month, .day], from: self)
-        return Calendar.current.date(from: components) ?? self
-    }
-    
-    func setting(time: Date) -> Date {
+    private func combineDateAndTime(date: Date, time: Date) -> Date {
         let calendar = Calendar.current
+        let dateComponents = calendar.dateComponents([.year, .month, .day], from: date)
         let timeComponents = calendar.dateComponents([.hour, .minute], from: time)
-        var components = calendar.dateComponents([.year, .month, .day], from: self)
-        components.hour = timeComponents.hour
-        components.minute = timeComponents.minute
-        return calendar.date(from: components) ?? self
+        
+        var combinedComponents = DateComponents()
+        combinedComponents.year = dateComponents.year
+        combinedComponents.month = dateComponents.month
+        combinedComponents.day = dateComponents.day
+        combinedComponents.hour = timeComponents.hour
+        combinedComponents.minute = timeComponents.minute
+        
+        return calendar.date(from: combinedComponents) ?? date
+    }
+
+    static func getDefaultStartTime() -> Date {
+        let calendar = Calendar.current
+        let now = Date()
+        let defaultHour = 9
+        let defaultMinute = 0
+        
+        var components = calendar.dateComponents([.year, .month, .day], from: now)
+        components.hour = defaultHour
+        components.minute = defaultMinute
+        
+        let defaultTime = calendar.date(from: components)!
+        
+        if defaultTime > now {
+            return defaultTime
+        } else {
+            return calendar.date(byAdding: .day, value: 1, to: defaultTime)!
+        }
     }
 }
