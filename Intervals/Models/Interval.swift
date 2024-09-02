@@ -29,6 +29,10 @@ struct Interval: Identifiable, Codable {
         self.frequencyType = frequencyType
         self.frequencyCount = frequencyCount
         self.nextDue = Self.calculateNextDue(from: startDate, frequencyType: frequencyType, frequencyCount: frequencyCount)
+        
+        print("Interval initialized:")
+        print("Start Date: \(startDate)")
+        print("Next Due: \(nextDue)")
     }
 
     mutating func markAsCompleted() {
@@ -38,8 +42,24 @@ struct Interval: Identifiable, Codable {
     }
 
     mutating func updateNextDue() {
-        let baseDate = max(lastCompleted ?? startDate, Date())
-        nextDue = Self.calculateNextDue(from: baseDate, frequencyType: frequencyType, frequencyCount: frequencyCount)
+        let now = Date()
+        let calendar = Calendar.current
+        
+        // If the start date is in the past, use it as a reference to calculate the next due date
+        if startDate < now {
+            var nextDueCandidate = startDate
+            while nextDueCandidate <= now {
+                nextDueCandidate = Self.calculateNextDue(from: nextDueCandidate, frequencyType: frequencyType, frequencyCount: frequencyCount)
+            }
+            nextDue = nextDueCandidate
+        } else {
+            // If the start date is in the future, use it directly
+            nextDue = Self.calculateNextDue(from: startDate, frequencyType: frequencyType, frequencyCount: frequencyCount)
+        }
+        
+        print("Next due updated:")
+        print("Start Date: \(startDate)")
+        print("New Next Due: \(nextDue)")
     }
 
     static func calculateNextDue(from date: Date, frequencyType: FrequencyType, frequencyCount: Int) -> Date {
@@ -54,14 +74,11 @@ struct Interval: Identifiable, Codable {
             components = DateComponents(month: frequencyCount)
         }
         
-        var nextDate = calendar.date(byAdding: components, to: date) ?? date
+        let nextDate = calendar.date(byAdding: components, to: date) ?? date
         
-        // Ensure the next due date is in the future
-        if nextDate <= Date() {
-            while nextDate <= Date() {
-                nextDate = calendar.date(byAdding: components, to: nextDate) ?? nextDate
-            }
-        }
+        print("Calculated next due:")
+        print("From Date: \(date)")
+        print("Next Date: \(nextDate)")
         
         return nextDate
     }

@@ -19,6 +19,10 @@ struct AddEditIntervalView: View {
         _frequencyType = State(initialValue: interval?.frequencyType ?? .days)
         _frequencyCount = State(initialValue: interval?.frequencyCount ?? 1)
         _intervalId = State(initialValue: interval?.id)
+        
+        print("Init AddEditIntervalView:")
+        print("Initial startDate: \(interval?.startDate.removeTime() ?? Date().removeTime())")
+        print("Initial reminderTime: \(interval?.startDate.extractTime() ?? Self.getDefaultReminderTime())")
     }
 
     var body: some View {
@@ -80,7 +84,14 @@ struct AddEditIntervalView: View {
     }
 
     private func saveNewInterval() {
+        print("Saving new interval:")
+        print("Start Date before combine: \(startDate)")
+        print("Reminder Time before combine: \(reminderTime)")
+        
         let finalDate = combineDateAndTime(date: startDate, time: reminderTime)
+        
+        print("Final Date after combine: \(finalDate)")
+        
         viewModel.addInterval(name: name, startDate: finalDate, frequencyType: frequencyType, frequencyCount: frequencyCount)
         dismiss()
     }
@@ -88,7 +99,13 @@ struct AddEditIntervalView: View {
     private func updateInterval() {
         guard let id = intervalId else { return }
         
+        print("Updating interval:")
+        print("Start Date before combine: \(startDate)")
+        print("Reminder Time before combine: \(reminderTime)")
+        
         let finalDate = combineDateAndTime(date: startDate, time: reminderTime)
+        
+        print("Final Date after combine: \(finalDate)")
         
         viewModel.updateInterval(id: id, name: name, startDate: finalDate, frequencyType: frequencyType, frequencyCount: frequencyCount)
         dismiss()
@@ -106,7 +123,14 @@ struct AddEditIntervalView: View {
         combinedComponents.hour = timeComponents.hour
         combinedComponents.minute = timeComponents.minute
         
-        return calendar.date(from: combinedComponents) ?? date
+        let result = calendar.date(from: combinedComponents) ?? date
+        
+        print("Combining date and time:")
+        print("Input Date: \(date)")
+        print("Input Time: \(time)")
+        print("Result: \(result)")
+        
+        return result
     }
 
     static func getDefaultReminderTime() -> Date {

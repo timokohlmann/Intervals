@@ -148,19 +148,32 @@ class IntervalViewModel: ObservableObject {
     }
 
     func addInterval(name: String, startDate: Date, frequencyType: FrequencyType, frequencyCount: Int) {
+        print("Adding new interval:")
+        print("Name: \(name)")
+        print("Start Date: \(startDate)")
+        print("Frequency: Every \(frequencyCount) \(frequencyType.rawValue)")
+        
         let newInterval = Interval(name: name, startDate: startDate, frequencyType: frequencyType, frequencyCount: frequencyCount)
         intervals.append(newInterval)
         scheduleNotification(for: newInterval)
+        
+        print("New interval added with next due date: \(newInterval.nextDue)")
     }
 
     func updateInterval(id: UUID, name: String, startDate: Date, frequencyType: FrequencyType, frequencyCount: Int) {
         if let index = intervals.firstIndex(where: { $0.id == id }) {
+            print("Updating interval: \(name)")
+            print("New start date: \(startDate)")
+            print("New frequency: Every \(frequencyCount) \(frequencyType.rawValue)")
+            
             intervals[index].name = name
             intervals[index].startDate = startDate
             intervals[index].frequencyType = frequencyType
             intervals[index].frequencyCount = frequencyCount
             intervals[index].updateNextDue()
 
+            print("Updated next due date: \(intervals[index].nextDue)")
+            
             scheduleNotification(for: intervals[index])
         }
     }
