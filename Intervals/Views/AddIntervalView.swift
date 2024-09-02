@@ -5,8 +5,7 @@ struct AddEditIntervalView: View {
     @ObservedObject var viewModel: IntervalViewModel
     @State private var name: String
     @State private var startDate: Date
-    @State private var includeTime: Bool
-    @State private var startTime: Date
+    @State private var reminderTime: Date
     @State private var frequencyType: FrequencyType
     @State private var frequencyCount: Int
     @State private var intervalId: UUID?
@@ -15,12 +14,15 @@ struct AddEditIntervalView: View {
     init(viewModel: IntervalViewModel, interval: Interval? = nil) {
         self.viewModel = viewModel
         _name = State(initialValue: interval?.name ?? "")
-        _startDate = State(initialValue: interval?.startDate.removeTime() ?? Date())
-        _includeTime = State(initialValue: interval?.includeTime ?? false)
-        _startTime = State(initialValue: interval?.startDate ?? Date())
+        _startDate = State(initialValue: interval?.startDate.removeTime() ?? Date().removeTime())
+        _reminderTime = State(initialValue: interval?.startDate.extractTime() ?? Self.getDefaultReminderTime())
         _frequencyType = State(initialValue: interval?.frequencyType ?? .days)
         _frequencyCount = State(initialValue: interval?.frequencyCount ?? 1)
         _intervalId = State(initialValue: interval?.id)
+        
+        print("Init AddEditIntervalView:")
+        print("Initial startDate: \(interval?.startDate.removeTime() ?? Date().removeTime())")
+        print("Initial reminderTime: \(interval?.startDate.extractTime() ?? Self.getDefaultReminderTime())")
     }
 
     var body: some View {
@@ -28,11 +30,7 @@ struct AddEditIntervalView: View {
             Form {
                 TextField("Interval Name", text: $name)
                 DatePicker("Start Date", selection: $startDate, displayedComponents: .date)
-                Toggle("Include Time", isOn: $includeTime)
-                
-                if includeTime {
-                    DatePicker("Start Time", selection: $startTime, displayedComponents: .hourAndMinute)
-                }
+                DatePicker("Reminder Time", selection: $reminderTime, displayedComponents: .hourAndMinute)
                 
                 Picker("Frequency Type", selection: $frequencyType) {
                     ForEach(FrequencyType.allCases, id: \.self) { type in
@@ -41,13 +39,13 @@ struct AddEditIntervalView: View {
                 }
                 
                 Stepper(value: $frequencyCount, in: 1...365) {
-                                    HStack(spacing: 0) {
-                                        Text("Every ")
-                                        Text("\(frequencyCount)")
-                                            .fontWeight(.bold)
-                                        Text(" \(frequencyType.rawValue.lowercased().dropLast(frequencyCount == 1 ? 1 : 0))")
-                                    }
-                                }
+                    HStack(spacing: 0) {
+                        Text("Every ")
+                        Text("\(frequencyCount)")
+                            .fontWeight(.bold)
+                        Text(" \(frequencyType.rawValue.lowercased().dropLast(frequencyCount == 1 ? 1 : 0))")
+                    }
+                }
                 
                 if intervalId != nil {
                     Section {
@@ -75,7 +73,7 @@ struct AddEditIntervalView: View {
                 Button("Cancel", role: .cancel) { }
                 Button("Delete", role: .destructive) {
                     if let id = intervalId {
-                        viewModel.deleteInterval(Interval(id: id, name: "", startDate: Date(), frequencyType: .days, frequencyCount: 1, includeTime: false))
+                        viewModel.deleteInterval(Interval(id: id, name: "", startDate: Date(), frequencyType: .days, frequencyCount: 1))
                     }
                     dismiss()
                 }
@@ -86,34 +84,74 @@ struct AddEditIntervalView: View {
     }
 
     private func saveNewInterval() {
-        let finalDate = includeTime ? startDate.setting(time: startTime) : startDate.removeTime()
-        viewModel.addInterval(name: name, startDate: finalDate, frequencyType: frequencyType, frequencyCount: frequencyCount, includeTime: includeTime)
+        print("Saving new interval:")
+        print("Start Date before combine: \(startDate)")
+        print("Reminder Time before combine: \(reminderTime)")
+        
+        let finalDate = combineDateAndTime(date: startDate, time: reminderTime)
+        
+        print("Final Date after combine: \(finalDate)")
+        
+        viewModel.addInterval(name: name, startDate: finalDate, frequencyType: frequencyType, frequencyCount: frequencyCount)
         dismiss()
     }
 
     private func updateInterval() {
-        guard let id = intervalId,
-              let _ = viewModel.intervals.first(where: { $0.id == id }) else { return }
+        guard let id = intervalId else { return }
         
-        let finalDate = includeTime ? startDate.setting(time: startTime) : startDate.removeTime()
+        print("Updating interval:")
+        print("Start Date before combine: \(startDate)")
+        print("Reminder Time before combine: \(reminderTime)")
         
-        viewModel.updateInterval(id: id, name: name, startDate: finalDate, frequencyType: frequencyType, frequencyCount: frequencyCount, includeTime: includeTime)
+        let finalDate = combineDateAndTime(date: startDate, time: reminderTime)
+        
+        print("Final Date after combine: \(finalDate)")
+        
+        viewModel.updateInterval(id: id, name: name, startDate: finalDate, frequencyType: frequencyType, frequencyCount: frequencyCount)
         dismiss()
+    }
+
+    private func combineDateAndTime(date: Date, time: Date) -> Date {
+        let calendar = Calendar.current
+        let dateComponents = calendar.dateComponents([.year, .month, .day], from: date)
+        let timeComponents = calendar.dateComponents([.hour, .minute], from: time)
+        
+        var combinedComponents = DateComponents()
+        combinedComponents.year = dateComponents.year
+        combinedComponents.month = dateComponents.month
+        combinedComponents.day = dateComponents.day
+        combinedComponents.hour = timeComponents.hour
+        combinedComponents.minute = timeComponents.minute
+        
+        let result = calendar.date(from: combinedComponents) ?? date
+        
+        print("Combining date and time:")
+        print("Input Date: \(date)")
+        print("Input Time: \(time)")
+        print("Result: \(result)")
+        
+        return result
+    }
+
+    static func getDefaultReminderTime() -> Date {
+        let calendar = Calendar.current
+        var components = DateComponents()
+        components.hour = 9
+        components.minute = 0
+        return calendar.date(from: components) ?? Date()
     }
 }
 
 extension Date {
     func removeTime() -> Date {
-        let components = Calendar.current.dateComponents([.year, .month, .day], from: self)
-        return Calendar.current.date(from: components) ?? self
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.year, .month, .day], from: self)
+        return calendar.date(from: components) ?? self
     }
     
-    func setting(time: Date) -> Date {
+    func extractTime() -> Date {
         let calendar = Calendar.current
-        let timeComponents = calendar.dateComponents([.hour, .minute], from: time)
-        var components = calendar.dateComponents([.year, .month, .day], from: self)
-        components.hour = timeComponents.hour
-        components.minute = timeComponents.minute
+        let components = calendar.dateComponents([.hour, .minute], from: self)
         return calendar.date(from: components) ?? self
     }
 }
