@@ -15,7 +15,7 @@ struct AddEditIntervalView: View {
         self.viewModel = viewModel
         _name = State(initialValue: interval?.name ?? "")
         _startDate = State(initialValue: interval?.startDate.removeTime() ?? Date().removeTime())
-        _reminderTime = State(initialValue: interval?.startDate ?? Self.getDefaultReminderTime())
+        _reminderTime = State(initialValue: interval?.startDate.extractTime() ?? Self.getDefaultReminderTime())
         _frequencyType = State(initialValue: interval?.frequencyType ?? .days)
         _frequencyCount = State(initialValue: interval?.frequencyCount ?? 1)
         _intervalId = State(initialValue: interval?.id)
@@ -111,15 +111,10 @@ struct AddEditIntervalView: View {
 
     static func getDefaultReminderTime() -> Date {
         let calendar = Calendar.current
-        let now = Date()
-        let defaultHour = 9
-        let defaultMinute = 0
-        
-        var components = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: now)
-        components.hour = defaultHour
-        components.minute = defaultMinute
-        
-        return calendar.date(from: components) ?? now
+        var components = DateComponents()
+        components.hour = 9
+        components.minute = 0
+        return calendar.date(from: components) ?? Date()
     }
 }
 
@@ -127,6 +122,12 @@ extension Date {
     func removeTime() -> Date {
         let calendar = Calendar.current
         let components = calendar.dateComponents([.year, .month, .day], from: self)
+        return calendar.date(from: components) ?? self
+    }
+    
+    func extractTime() -> Date {
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.hour, .minute], from: self)
         return calendar.date(from: components) ?? self
     }
 }
