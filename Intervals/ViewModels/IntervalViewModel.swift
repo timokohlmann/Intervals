@@ -108,13 +108,26 @@ class IntervalViewModel: ObservableObject {
         }
     }
 
+    private func getNotificationDate(for interval: Interval) -> Date {
+        if interval.includeTime {
+            return interval.nextDue
+        } else {
+            let calendar = Calendar.current
+            var components = calendar.dateComponents([.year, .month, .day], from: interval.nextDue)
+            components.hour = 9 // Set to 9:00 AM
+            components.minute = 0
+            return calendar.date(from: components) ?? interval.nextDue
+        }
+    }
+
     private func createAndScheduleNotification(for interval: Interval) {
         let content = UNMutableNotificationContent()
         content.title = "Task Due: \(interval.name)"
         content.body = "It's time to complete your task."
         content.sound = .default
 
-        let triggerDate = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: interval.nextDue)
+        let notificationDate = getNotificationDate(for: interval)
+        let triggerDate = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: notificationDate)
         let trigger = UNCalendarNotificationTrigger(dateMatching: triggerDate, repeats: false)
         let request = UNNotificationRequest(identifier: interval.id.uuidString, content: content, trigger: trigger)
 
@@ -163,7 +176,6 @@ class IntervalViewModel: ObservableObject {
             intervals[index].updateNextDue()
 
             scheduleNotification(for: intervals[index])
-            
         }
     }
 
