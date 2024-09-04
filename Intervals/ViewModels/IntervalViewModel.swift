@@ -38,7 +38,7 @@ class IntervalViewModel: ObservableObject {
                     self.intervals[index].status = .overdue
                     self.scheduleNotification(for: self.intervals[index])
                     
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 43200) { // 12 hours
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 7200) { // 2 hours
                         if self.intervals[index].status == .overdue {
                             self.updateNextDueDate(for: self.intervals[index])
                         }
