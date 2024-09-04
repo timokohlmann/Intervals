@@ -14,6 +14,8 @@ class IntervalViewModel: ObservableObject {
     private let saveKey = "savedIntervals"
     private let logger = Logger(subsystem: "com.timokohlmann.Intervals", category: "IntervalViewModel")
     private var cancellables = Set<AnyCancellable>()
+    
+    private let autoUpdateDelay: TimeInterval = 3600
 
     init() {
         loadIntervals()
@@ -30,23 +32,23 @@ class IntervalViewModel: ObservableObject {
     }
 
     private func checkOverdueIntervals() {
-        let now = Date()
-        for index in intervals.indices {
-            let interval = intervals[index]
-            if interval.nextDue <= now && interval.status == .normal {
-                DispatchQueue.main.async {
-                    self.intervals[index].status = .overdue
-                    self.scheduleNotification(for: self.intervals[index])
-                    
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 7200) { // 2 hours
-                        if self.intervals[index].status == .overdue {
-                            self.updateNextDueDate(for: self.intervals[index])
+            let now = Date()
+            for index in intervals.indices {
+                let interval = intervals[index]
+                if interval.nextDue <= now && interval.status == .normal {
+                    DispatchQueue.main.async {
+                        self.intervals[index].status = .overdue
+                        self.scheduleNotification(for: self.intervals[index])
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + self.autoUpdateDelay) {
+                            if self.intervals[index].status == .overdue {
+                                self.updateNextDueDate(for: self.intervals[index])
+                            }
                         }
                     }
                 }
             }
         }
-    }
 
     private func updateNextDueDate(for interval: Interval) {
         if let index = intervals.firstIndex(where: { $0.id == interval.id }) {
