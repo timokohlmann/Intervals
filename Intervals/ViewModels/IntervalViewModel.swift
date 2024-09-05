@@ -15,7 +15,7 @@ class IntervalViewModel: ObservableObject {
     private let logger = Logger(subsystem: "com.timokohlmann.Intervals", category: "IntervalViewModel")
     private var cancellables = Set<AnyCancellable>()
     
-    let autoUpdateDelay: TimeInterval = 30 // 2 hours
+    let autoUpdateDelay: TimeInterval = 10800 // 3 hours
 
     init() {
         loadIntervals()
