@@ -3,13 +3,6 @@ import Combine
 import UserNotifications
 import os
 
-enum IntervalError: Error {
-    case saveFailed
-    case loadFailed
-    case notificationPermissionDenied
-    case notificationScheduleFailed
-}
-
 class IntervalViewModel: ObservableObject {
     @Published var intervals: [Interval] = [] {
         didSet {
@@ -17,14 +10,59 @@ class IntervalViewModel: ObservableObject {
         }
     }
     @Published var errorMessage: String?
-    
+
     private let saveKey = "savedIntervals"
     private let logger = Logger(subsystem: "com.timokohlmann.Intervals", category: "IntervalViewModel")
+    private var cancellables = Set<AnyCancellable>()
+    
+    let autoUpdateDelay: TimeInterval = 10800 // 3 hours
 
     init() {
         loadIntervals()
+        setupPublishers()
     }
-    
+
+    private func setupPublishers() {
+        Timer.publish(every: 3, on: .main, in: .common)
+            .autoconnect()
+            .sink { [weak self] _ in
+                self?.checkAndUpdateIntervals()
+            }
+            .store(in: &cancellables)
+    }
+
+    private func checkAndUpdateIntervals() {
+        let now = Date()
+        for index in intervals.indices {
+            let interval = intervals[index]
+            if interval.nextDue <= now {
+                if interval.status == .normal {
+                    DispatchQueue.main.async {
+                        self.intervals[index].status = .overdue
+                        self.intervals[index].becameOverdueAt = now
+                        self.scheduleNotification(for: self.intervals[index])
+                    }
+                } else if interval.status == .overdue {
+                    if let becameOverdueAt = interval.becameOverdueAt,
+                       now.timeIntervalSince(becameOverdueAt) >= self.autoUpdateDelay {
+                        DispatchQueue.main.async {
+                            self.updateNextDueDate(for: self.intervals[index])
+                            // Keep the status as overdue
+                            self.intervals[index].becameOverdueAt = now // Reset the overdue timestamp
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private func updateNextDueDate(for interval: Interval) {
+        if let index = intervals.firstIndex(where: { $0.id == interval.id }) {
+            intervals[index].updateNextDue()
+            scheduleNotification(for: intervals[index])
+        }
+    }
+
     private func saveIntervals() {
         do {
             let data = try JSONEncoder().encode(intervals)
@@ -37,13 +75,14 @@ class IntervalViewModel: ObservableObject {
             self.errorMessage = "Failed to save your intervals. Please try again."
         }
     }
-    
+
     private func loadIntervals() {
         if let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
             let fileURL = documentsDirectory.appendingPathComponent(saveKey)
             do {
                 let data = try Data(contentsOf: fileURL)
                 intervals = try JSONDecoder().decode([Interval].self, from: data)
+                checkAndUpdateIntervals()
             } catch {
                 logger.error("Failed to load intervals: \(error.localizedDescription)")
                 self.errorMessage = "Failed to load your intervals. Please try restarting the app."
@@ -51,7 +90,7 @@ class IntervalViewModel: ObservableObject {
             }
         }
     }
-    
+
     func scheduleNotification(for interval: Interval) {
         UNUserNotificationCenter.current().getNotificationSettings { settings in
             switch settings.authorizationStatus {
@@ -68,7 +107,6 @@ class IntervalViewModel: ObservableObject {
             case .denied:
                 self.handleNotificationPermissionDenied()
             case .ephemeral:
-                // Handle ephemeral authorization status (used for App Clips)
                 self.logger.warning("Ephemeral notification authorization status")
                 self.createAndScheduleNotification(for: interval)
             @unknown default:
@@ -77,7 +115,7 @@ class IntervalViewModel: ObservableObject {
             }
         }
     }
-    
+
     private func createAndScheduleNotification(for interval: Interval) {
         let content = UNMutableNotificationContent()
         content.title = "Task Due: \(interval.name)"
@@ -89,15 +127,17 @@ class IntervalViewModel: ObservableObject {
         let request = UNNotificationRequest(identifier: interval.id.uuidString, content: content, trigger: trigger)
 
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [interval.id.uuidString])
-        
+
         UNUserNotificationCenter.current().add(request) { error in
             if let error = error {
                 self.logger.error("Failed to schedule notification: \(error.localizedDescription)")
                 self.errorMessage = "Failed to schedule notification. Please check your device settings."
+            } else {
+                self.logger.info("Successfully scheduled notification for interval: \(interval.name)")
             }
         }
     }
-    
+
     private func requestNotificationPermission(completion: @escaping (Bool) -> Void) {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
             if let error = error {
@@ -109,51 +149,66 @@ class IntervalViewModel: ObservableObject {
             }
         }
     }
-    
+
     private func handleNotificationPermissionDenied() {
         logger.warning("Notification permission denied")
         self.errorMessage = "Notifications are disabled. Please enable them in Settings to receive reminders."
     }
-    
-    func addInterval(name: String, startDate: Date, frequencyType: FrequencyType, frequencyCount: Int, includeTime: Bool) {
-        let newInterval = Interval(name: name, startDate: startDate, frequencyType: frequencyType, frequencyCount: frequencyCount, includeTime: includeTime)
+
+    func addInterval(name: String, startDate: Date, frequencyType: FrequencyType, frequencyCount: Int) {
+        print("Adding new interval:")
+        print("Name: \(name)")
+        print("Start Date: \(startDate)")
+        print("Frequency: Every \(frequencyCount) \(frequencyType.rawValue)")
+        
+        let newInterval = Interval(name: name, startDate: startDate, frequencyType: frequencyType, frequencyCount: frequencyCount)
         intervals.append(newInterval)
         scheduleNotification(for: newInterval)
+        
+        print("New interval added with next due date: \(newInterval.nextDue)")
     }
-    
-    func updateInterval(id: UUID, name: String, startDate: Date, frequencyType: FrequencyType, frequencyCount: Int, includeTime: Bool) {
+
+    func updateInterval(id: UUID, name: String, startDate: Date, frequencyType: FrequencyType, frequencyCount: Int) {
         if let index = intervals.firstIndex(where: { $0.id == id }) {
+            print("Updating interval: \(name)")
+            print("New start date: \(startDate)")
+            print("New frequency: Every \(frequencyCount) \(frequencyType.rawValue)")
+            
             intervals[index].name = name
             intervals[index].startDate = startDate
             intervals[index].frequencyType = frequencyType
             intervals[index].frequencyCount = frequencyCount
-            intervals[index].includeTime = includeTime
             intervals[index].updateNextDue()
 
-            UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [id.uuidString])
+            print("Updated next due date: \(intervals[index].nextDue)")
+            
             scheduleNotification(for: intervals[index])
         }
     }
-    
+
     func deleteInterval(_ interval: Interval) {
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [interval.id.uuidString])
         intervals.removeAll { $0.id == interval.id }
     }
-    
+
     func markIntervalAsCompleted(_ intervalId: UUID) {
         if let index = intervals.firstIndex(where: { $0.id == intervalId }) {
-            intervals[index].markAsCompleted()
-            scheduleNotification(for: intervals[index])
+            intervals[index].status = .completing
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                self.intervals[index].markAsCompleted()
+                self.updateNextDueDate(for: self.intervals[index])
+                self.intervals[index].status = .normal
+                self.intervals[index].becameOverdueAt = nil
+            }
         }
     }
-      
+
     func updateAllDueDates() {
-        for index in intervals.indices {
-            intervals[index].updateNextDue()
-            scheduleNotification(for: intervals[index])
+        for interval in intervals where interval.status != .overdue {
+            updateNextDueDate(for: interval)
         }
     }
-      
+
     func getOverdueIntervals() -> [Interval] {
         let now = Date()
         return intervals.filter { $0.nextDue < now }

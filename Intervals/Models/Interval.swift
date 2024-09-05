@@ -6,6 +6,12 @@ enum FrequencyType: String, CaseIterable, Codable {
     case months = "Months"
 }
 
+enum IntervalStatus: Codable {
+    case normal
+    case overdue
+    case completing
+}
+
 struct Interval: Identifiable, Codable {
     let id: UUID
     var name: String
@@ -14,50 +20,51 @@ struct Interval: Identifiable, Codable {
     var frequencyCount: Int
     var lastCompleted: Date?
     var nextDue: Date
-    var includeTime: Bool
+    var status: IntervalStatus = .normal
+    var becameOverdueAt: Date?  // New property
 
-    init(id: UUID = UUID(), name: String, startDate: Date, frequencyType: FrequencyType, frequencyCount: Int, includeTime: Bool) {
+    init(id: UUID = UUID(), name: String, startDate: Date, frequencyType: FrequencyType, frequencyCount: Int) {
         self.id = id
         self.name = name
         self.startDate = startDate
         self.frequencyType = frequencyType
         self.frequencyCount = frequencyCount
-        self.includeTime = includeTime
-        self.nextDue = startDate // Initial calculation of nextDue
+        self.nextDue = Self.calculateNextDue(from: startDate, frequencyType: frequencyType, frequencyCount: frequencyCount)
+        
+        print("Interval initialized:")
+        print("Start Date: \(startDate)")
+        print("Next Due: \(nextDue)")
     }
 
     mutating func markAsCompleted() {
-        // Mark the interval as completed
         self.lastCompleted = Date()
         updateNextDue()
+        self.status = .normal
+        self.becameOverdueAt = nil  // Reset when completed
     }
 
     mutating func updateNextDue() {
-        print("Updating next due date for \(name)")
-        print("Current nextDue: \(nextDue)")
+        let now = Date()
         let calendar = Calendar.current
-        let components: DateComponents
-        switch frequencyType {
-        case .days:
-            components = DateComponents(day: frequencyCount)
-        case .weeks:
-            components = DateComponents(day: frequencyCount * 7)
-        case .months:
-            components = DateComponents(month: frequencyCount)
+        
+        if startDate < now {
+            var nextDueCandidate = startDate
+            while nextDueCandidate <= now {
+                nextDueCandidate = Self.calculateNextDue(from: nextDueCandidate, frequencyType: frequencyType, frequencyCount: frequencyCount)
+            }
+            nextDue = nextDueCandidate
+        } else {
+            nextDue = Self.calculateNextDue(from: startDate, frequencyType: frequencyType, frequencyCount: frequencyCount)
         }
-        // Use startDate instead of lastCompleted for the initial calculation
-        nextDue = calendar.date(byAdding: components, to: startDate) ?? startDate
-        // If lastCompleted exists and is after the calculated nextDue, recalculate from lastCompleted
-        if let lastCompleted = lastCompleted, lastCompleted > nextDue {
-            nextDue = calendar.date(byAdding: components, to: lastCompleted) ?? startDate
-        }
-        print("Updated nextDue: \(nextDue)")
+        
+        print("Next due updated:")
+        print("Start Date: \(startDate)")
+        print("New Next Due: \(nextDue)")
     }
 
     static func calculateNextDue(from date: Date, frequencyType: FrequencyType, frequencyCount: Int) -> Date {
         let calendar = Calendar.current
         let components: DateComponents
-        
         switch frequencyType {
         case .days:
             components = DateComponents(day: frequencyCount)
@@ -66,7 +73,13 @@ struct Interval: Identifiable, Codable {
         case .months:
             components = DateComponents(month: frequencyCount)
         }
-
-        return calendar.date(byAdding: components, to: date) ?? date
+        
+        let nextDate = calendar.date(byAdding: components, to: date) ?? date
+        
+        print("Calculated next due:")
+        print("From Date: \(date)")
+        print("Next Date: \(nextDate)")
+        
+        return nextDate
     }
 }
