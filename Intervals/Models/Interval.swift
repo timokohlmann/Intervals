@@ -21,6 +21,7 @@ struct Interval: Identifiable, Codable {
     var lastCompleted: Date?
     var nextDue: Date
     var status: IntervalStatus = .normal
+    var becameOverdueAt: Date?  // New property
 
     init(id: UUID = UUID(), name: String, startDate: Date, frequencyType: FrequencyType, frequencyCount: Int) {
         self.id = id
@@ -39,13 +40,13 @@ struct Interval: Identifiable, Codable {
         self.lastCompleted = Date()
         updateNextDue()
         self.status = .normal
+        self.becameOverdueAt = nil  // Reset when completed
     }
 
     mutating func updateNextDue() {
         let now = Date()
         let calendar = Calendar.current
         
-        // If the start date is in the past, use it as a reference to calculate the next due date
         if startDate < now {
             var nextDueCandidate = startDate
             while nextDueCandidate <= now {
@@ -53,7 +54,6 @@ struct Interval: Identifiable, Codable {
             }
             nextDue = nextDueCandidate
         } else {
-            // If the start date is in the future, use it directly
             nextDue = Self.calculateNextDue(from: startDate, frequencyType: frequencyType, frequencyCount: frequencyCount)
         }
         
