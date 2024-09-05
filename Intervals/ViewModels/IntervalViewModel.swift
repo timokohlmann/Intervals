@@ -15,7 +15,7 @@ class IntervalViewModel: ObservableObject {
     private let logger = Logger(subsystem: "com.timokohlmann.Intervals", category: "IntervalViewModel")
     private var cancellables = Set<AnyCancellable>()
     
-    private let autoUpdateDelay: TimeInterval = 3600
+    let autoUpdateDelay: TimeInterval = 30 // 2 hours
 
     init() {
         loadIntervals()
@@ -26,29 +26,35 @@ class IntervalViewModel: ObservableObject {
         Timer.publish(every: 3, on: .main, in: .common)
             .autoconnect()
             .sink { [weak self] _ in
-                self?.checkOverdueIntervals()
+                self?.checkAndUpdateIntervals()
             }
             .store(in: &cancellables)
     }
 
-    private func checkOverdueIntervals() {
-            let now = Date()
-            for index in intervals.indices {
-                let interval = intervals[index]
-                if interval.nextDue <= now && interval.status == .normal {
+    private func checkAndUpdateIntervals() {
+        let now = Date()
+        for index in intervals.indices {
+            let interval = intervals[index]
+            if interval.nextDue <= now {
+                if interval.status == .normal {
                     DispatchQueue.main.async {
                         self.intervals[index].status = .overdue
+                        self.intervals[index].becameOverdueAt = now
                         self.scheduleNotification(for: self.intervals[index])
-                        
-                        DispatchQueue.main.asyncAfter(deadline: .now() + self.autoUpdateDelay) {
-                            if self.intervals[index].status == .overdue {
-                                self.updateNextDueDate(for: self.intervals[index])
-                            }
+                    }
+                } else if interval.status == .overdue {
+                    if let becameOverdueAt = interval.becameOverdueAt,
+                       now.timeIntervalSince(becameOverdueAt) >= self.autoUpdateDelay {
+                        DispatchQueue.main.async {
+                            self.updateNextDueDate(for: self.intervals[index])
+                            // Keep the status as overdue
+                            self.intervals[index].becameOverdueAt = now // Reset the overdue timestamp
                         }
                     }
                 }
             }
         }
+    }
 
     private func updateNextDueDate(for interval: Interval) {
         if let index = intervals.firstIndex(where: { $0.id == interval.id }) {
@@ -76,7 +82,7 @@ class IntervalViewModel: ObservableObject {
             do {
                 let data = try Data(contentsOf: fileURL)
                 intervals = try JSONDecoder().decode([Interval].self, from: data)
-                checkOverdueIntervals()
+                checkAndUpdateIntervals()
             } catch {
                 logger.error("Failed to load intervals: \(error.localizedDescription)")
                 self.errorMessage = "Failed to load your intervals. Please try restarting the app."
@@ -191,6 +197,8 @@ class IntervalViewModel: ObservableObject {
             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                 self.intervals[index].markAsCompleted()
                 self.updateNextDueDate(for: self.intervals[index])
+                self.intervals[index].status = .normal
+                self.intervals[index].becameOverdueAt = nil
             }
         }
     }

@@ -3,6 +3,9 @@ import SwiftUI
 struct IntervalListView: View {
     @StateObject private var viewModel = IntervalViewModel()
     @State private var showingAddInterval = false
+    @State private var currentTime = Date()
+
+    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
     var body: some View {
         NavigationView {
@@ -11,7 +14,7 @@ struct IntervalListView: View {
                     NavigationLink(
                         destination: AddEditIntervalView(viewModel: viewModel, interval: interval),
                         label: {
-                            IntervalRowView(interval: interval, viewModel: viewModel)
+                            IntervalRowView(interval: interval, viewModel: viewModel, currentTime: currentTime)
                         }
                     )
                 }
@@ -30,12 +33,16 @@ struct IntervalListView: View {
                 AddEditIntervalView(viewModel: viewModel)
             }
         }
+        .onReceive(timer) { _ in
+            self.currentTime = Date()
+        }
     }
 }
 
 struct IntervalRowView: View {
     let interval: Interval
     @ObservedObject var viewModel: IntervalViewModel
+    let currentTime: Date
 
     var body: some View {
         HStack {
@@ -47,7 +54,7 @@ struct IntervalRowView: View {
                     .foregroundColor(.secondary)
             }
             Spacer()
-            IntervalStatusView(interval: interval, viewModel: viewModel)
+            IntervalStatusView(interval: interval, viewModel: viewModel, currentTime: currentTime)
         }
     }
 
@@ -62,15 +69,13 @@ struct IntervalRowView: View {
 struct IntervalStatusView: View {
     let interval: Interval
     @ObservedObject var viewModel: IntervalViewModel
+    let currentTime: Date
     
     @State private var animationAmount: CGFloat = 1
 
     var body: some View {
         Group {
-            switch interval.status {
-            case .normal:
-                EmptyView()
-            case .overdue:
+            if shouldShowOverdueIcon {
                 Image(systemName: "clock.badge.exclamationmark")
                     .foregroundColor(.orange)
                     .onTapGesture {
@@ -79,7 +84,7 @@ struct IntervalStatusView: View {
                             viewModel.markIntervalAsCompleted(interval.id)
                         }
                     }
-            case .completing:
+            } else if interval.status == .completing {
                 Image(systemName: "checkmark.circle.fill")
                     .foregroundColor(.green)
                     .scaleEffect(animationAmount)
@@ -90,5 +95,11 @@ struct IntervalStatusView: View {
             }
         }
         .font(.title2)
+    }
+    
+    private var shouldShowOverdueIcon: Bool {
+        guard interval.status == .overdue else { return false }
+        guard let becameOverdueAt = interval.becameOverdueAt else { return true }
+        return currentTime.timeIntervalSince(becameOverdueAt) < viewModel.autoUpdateDelay
     }
 }
