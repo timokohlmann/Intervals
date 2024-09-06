@@ -11,6 +11,8 @@ struct AddEditIntervalView: View {
     @State private var intervalId: UUID?
     @State private var showingDeleteConfirmation = false
 
+    private let titlePrefix = "Title: "
+
     private var isEditMode: Bool {
         intervalId != nil
     }
@@ -36,7 +38,15 @@ struct AddEditIntervalView: View {
                     NextDueSection(interval: viewModel.intervals.first(where: { $0.id == intervalId }))
                 }
                 
-                TextField("Interval Name", text: $name)
+                if isEditMode {
+                    HStack {
+                        Text(titlePrefix)
+                        TextField("", text: $name)
+                    }
+                } else {
+                    TextField("Interval Title", text: $name)
+                }
+                
                 DatePicker("Start Date", selection: $startDate, displayedComponents: .date)
                 DatePicker("Reminder Time", selection: $reminderTime, displayedComponents: .hourAndMinute)
                 
