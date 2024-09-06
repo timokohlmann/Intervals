@@ -11,6 +11,10 @@ struct AddEditIntervalView: View {
     @State private var intervalId: UUID?
     @State private var showingDeleteConfirmation = false
 
+    private var isEditMode: Bool {
+        intervalId != nil
+    }
+
     init(viewModel: IntervalViewModel, interval: Interval? = nil) {
         self.viewModel = viewModel
         _name = State(initialValue: interval?.name ?? "")
@@ -28,6 +32,10 @@ struct AddEditIntervalView: View {
     var body: some View {
         NavigationView {
             Form {
+                if isEditMode {
+                    NextDueSection(interval: viewModel.intervals.first(where: { $0.id == intervalId }))
+                }
+                
                 TextField("Interval Name", text: $name)
                 DatePicker("Start Date", selection: $startDate, displayedComponents: .date)
                 DatePicker("Reminder Time", selection: $reminderTime, displayedComponents: .hourAndMinute)
@@ -47,7 +55,7 @@ struct AddEditIntervalView: View {
                     }
                 }
                 
-                if intervalId != nil {
+                if isEditMode {
                     Section {
                         Button("Save Changes") {
                             updateInterval()
@@ -61,13 +69,13 @@ struct AddEditIntervalView: View {
                     }
                 }
             }
-            .navigationTitle(intervalId == nil ? "Add Interval" : "Edit Interval")
+            .navigationTitle(isEditMode ? "Edit Interval" : "Add Interval")
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(
-                leading: intervalId == nil ? Button("Cancel") { dismiss() } : nil,
-                trailing: intervalId == nil ? Button("Save") {
+                leading: isEditMode ? nil : Button("Cancel") { dismiss() },
+                trailing: isEditMode ? nil : Button("Save") {
                     saveNewInterval()
-                }.disabled(name.isEmpty || frequencyCount == 0) : nil
+                }.disabled(name.isEmpty || frequencyCount == 0)
             )
             .alert("Are you sure?", isPresented: $showingDeleteConfirmation) {
                 Button("Cancel", role: .cancel) { }
@@ -139,6 +147,28 @@ struct AddEditIntervalView: View {
         components.hour = 9
         components.minute = 0
         return calendar.date(from: components) ?? Date()
+    }
+}
+
+struct NextDueSection: View {
+    let interval: Interval?
+    
+    var body: some View {
+        if let interval = interval {
+            Section {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Next Due")
+                        .font(.headline)
+                        .foregroundColor(.secondary)
+                    Text(interval.nextDue, style: .date)
+                        .font(.title2)
+                        .fontWeight(.bold)
+                    Text(interval.nextDue, style: .time)
+                        .font(.title3)
+                }
+                .padding(.vertical, 8)
+            }
+        }
     }
 }
 
